@@ -54,6 +54,7 @@ var BelleRepositoryPlugin = /** @class */ (function () {
         this.name = 'Belle Repository';
         this.icon = 'src/en/bellerepository/mainducky.png';
         this.site = 'https://bellerepository.com/';
+    // Updated to Madara-based plugin v1.0.2
         this.version = '1.0.2';
         this.filters = [];
         this.parseData = function (date) {
