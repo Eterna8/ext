@@ -8,7 +8,7 @@ import { NovelStatus } from '@libs/novelStatus';
 class ReadHivePlugin implements Plugin.PluginBase {
   id = 'readhive';
   name = 'ReadHive';
-  icon = 'src/en/readhive.png';
+  icon = 'src/en/readhive/readhive.jpg';
   site = 'https://readhive.org';
   version = '1.0.6';
   filters: Filters | undefined = undefined;
