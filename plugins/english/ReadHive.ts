@@ -1,150 +1,102 @@
-import { Plugin } from '@libs/plugin';
-import { load } from 'cheerio';
 import { fetchApi } from '@libs/fetch';
+import { Plugin } from '@/types/plugin';
+import { Filters } from '@libs/filterInputs';
+import { load as loadCheerio } from 'cheerio';
 import { defaultCover } from '@libs/defaultCover';
 import { NovelStatus } from '@libs/novelStatus';
-
-/**
- * ReadHive plugin for LNReader (Custom Laravel Backend)
- *
- * ReadHive uses a custom PHP/Laravel backend with Alpine.js + Tailwind CSS
- * NOT a WordPress/Madara site, so we need custom parsing
- *
- * Supports:
- * - /series/ID/v1/1.1 (chapter format)
- * - /series/ID/1/ (simpler chapter format)
- * - Alpine.js data attributes
- * - Custom Laravel routes
- */
 
 class ReadHivePlugin implements Plugin.PluginBase {
   id = 'readhive';
   name = 'ReadHive';
-  icon = 'src/en/readhive/readhive.jpg';
-  site = 'https://readhive.org/';
-  version = '1.0.3';
-  filters = [];
-
-  resolveUrl = (path: string) => {
-    try {
-      return new URL(path, this.site).toString();
-    } catch {
-      return this.site + path;
-    }
-  };
+  icon = 'src/en/readhive/icon.png';
+  site = 'https://readhive.org';
+  version = '1.0.5';
+  filters: Filters | undefined = undefined;
 
   async popularNovels(
     pageNo: number,
-    options: Plugin.PopularNovelsOptions<typeof this.filters>,
+    {
+      showLatestNovels,
+      filters,
+    }: Plugin.PopularNovelsOptions<typeof this.filters>,
   ): Promise<Plugin.NovelItem[]> {
     const novels: Plugin.NovelItem[] = [];
+
     try {
       const url = this.site + '/';
       const response = await fetchApi(url);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const html = await response.text();
-      const $ = load(html);
 
-      // Try common card selectors for Laravel sites
-      const cards = $(
-        '.series-card, .series-item, .novel-card, .post, .card',
-      ).slice(0, 40);
-      cards.each((i, el) => {
-        const a = $(el).find('a[href*="/series/"]').first();
-        if (!a || !a.attr('href')) return;
-        const href = this.resolveUrl(a.attr('href')!);
-        const title = (
-          a.text() ||
-          $(el).find('h2, h3, .title').text() ||
-          ''
-        ).trim();
+      const html = await response.text();
+      const $ = loadCheerio(html);
+
+      // ReadHive uses links to /series/{id}/
+      const seen = new Set<string>();
+
+      $('a[href*="/series/"]').each((i, el) => {
+        const href = $(el).attr('href');
+        if (!href) return;
+
+        // Match only series overview pages: /series/{id}/ or /series/{id}
+        const match = href.match(/\/series\/(\d+)\/?$/);
+        if (!match) return;
+
+        const seriesId = match[1];
+        const novelPath = `/series/${seriesId}/`;
+
+        if (seen.has(novelPath)) return;
+        seen.add(novelPath);
+
+        // Get title from link text or nearby elements
+        let title = $(el).text().trim();
+        if (!title || title.length < 2) {
+          // Try to find title in parent or sibling elements
+          title = $(el)
+            .closest('.series-card, .novel-card, .card, .item')
+            .find('h2, h3, .title, .name')
+            .first()
+            .text()
+            .trim();
+        }
+        if (!title || title.length < 2) {
+          title = `Series ${seriesId}`;
+        }
+
+        // Try to find cover image
+        let cover = defaultCover;
         const img = $(el).find('img').first();
-        const cover = img?.attr('src')
-          ? this.resolveUrl(img.attr('src')!)
-          : defaultCover;
+        if (img.length) {
+          const src = img.attr('src') || img.attr('data-src');
+          if (src) {
+            cover = src.startsWith('http') ? src : this.site + src;
+          }
+        } else {
+          // Look in parent container
+          const parentImg = $(el)
+            .closest('.series-card, .novel-card, .card, .item')
+            .find('img')
+            .first();
+          if (parentImg.length) {
+            const src = parentImg.attr('src') || parentImg.attr('data-src');
+            if (src) {
+              cover = src.startsWith('http') ? src : this.site + src;
+            }
+          }
+        }
+
         novels.push({
-          name: title || href,
-          path: href.replace(this.site, '/'),
-          cover: cover || defaultCover,
+          name: title,
+          path: novelPath,
+          cover: cover,
         });
       });
 
-      // Fallback: any '/series/' links on homepage
-      if (!novels.length) {
-        const seen = new Set<string>();
-        $('a[href*="/series/"]').each((i, el) => {
-          const href = $(el).attr('href') || '';
-          const abs = this.resolveUrl(href);
-          if (seen.has(abs)) return;
-          seen.add(abs);
-          const title = ($(el).text() || '').trim() || abs;
-          novels.push({
-            name: title,
-            path: abs.replace(this.site, '/'),
-            cover: defaultCover,
-          });
-        });
-      }
+      // Limit to reasonable number
+      return novels.slice(0, 40);
     } catch (err) {
-      console.warn('ReadHive popularNovels error', err);
+      console.error('ReadHive popularNovels error:', err);
     }
-    return novels;
-  }
 
-  async searchNovels(
-    searchTerm: string,
-    pageNo?: number,
-  ): Promise<Plugin.NovelItem[]> {
-    const novels: Plugin.NovelItem[] = [];
-    try {
-      const url = `${this.site}/?s=${encodeURIComponent(searchTerm)}`;
-      const response = await fetchApi(url);
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const html = await response.text();
-      const $ = load(html);
-
-      // Look for series cards first
-      const cardSel = '.series-card, .series-item, .novel-card, .post, .card';
-      const cards = $(cardSel);
-      if (cards.length) {
-        cards.each((i, el) => {
-          const a = $(el).find('a[href*="/series/"]').first();
-          if (!a || !a.attr('href')) return;
-          const href = this.resolveUrl(a.attr('href')!);
-          const title = (
-            a.text() ||
-            $(el).find('h2, h3, .title').text() ||
-            ''
-          ).trim();
-          const img = $(el).find('img').first();
-          const cover = img?.attr('src')
-            ? this.resolveUrl(img.attr('src')!)
-            : defaultCover;
-          novels.push({
-            name: title || href,
-            path: href.replace(this.site, '/'),
-            cover: cover || defaultCover,
-          });
-        });
-      } else {
-        // Fallback: any link with /series/
-        const seen = new Set<string>();
-        $('a[href*="/series/"]').each((i, el) => {
-          const href = $(el).attr('href') || '';
-          const abs = this.resolveUrl(href);
-          if (seen.has(abs)) return;
-          seen.add(abs);
-          const title = ($(el).text() || '').trim() || abs;
-          novels.push({
-            name: title,
-            path: abs.replace(this.site, '/'),
-            cover: defaultCover,
-          });
-        });
-      }
-    } catch (err) {
-      console.warn('ReadHive searchNovels error', err);
-    }
     return novels;
   }
 
@@ -155,166 +107,159 @@ class ReadHivePlugin implements Plugin.PluginBase {
       cover: defaultCover,
       chapters: [],
     };
+
     try {
-      const url = this.resolveUrl(novelPath);
+      const url = this.site + novelPath;
       const response = await fetchApi(url);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
       const html = await response.text();
-      const $ = load(html);
+      const $ = loadCheerio(html);
 
-      // Title
-      const title = $(
-        'h1.series-title, h1, .series-title, .post-title, .entry-title',
-      )
-        .first()
-        .text()
-        .trim();
-      if (title) novel.name = title;
-
-      // Cover
-      let cover =
-        $('img.cover, img.series-cover, .cover img, .post-thumbnail img')
-          .first()
-          .attr('src') || null;
-      if (!cover)
-        cover = $('meta[property="og:image"]').attr('content') || null;
-      if (cover) novel.cover = this.resolveUrl(cover);
-
-      // Summary
-      const summarySel =
-        '.series-synopsis, .summary, .desc, .description, .entry-summary, .post-excerpt';
-      let summary = '';
-      for (const sel of summarySel.split(',')) {
-        const txt = $(sel.trim()).first().text().trim();
-        if (txt) {
-          summary = txt;
-          break;
-        }
+      // Extract title
+      let title = $('h1, h2').first().text().trim();
+      // Alternative: look for meta tag
+      if (!title) {
+        title = $('meta[property="og:title"]').attr('content') || '';
       }
-      if (!summary)
-        summary = $('meta[name="description"]').attr('content') || '';
-      if (summary) novel.summary = summary;
+      if (title) {
+        novel.name = title;
+      }
 
-      // Status & genres (best-effort)
-      const statusText = $('.status, .series-status, .novel-status')
-        .first()
-        .text()
-        .trim()
-        .toLowerCase();
-      if (statusText.includes('complete') || statusText.includes('completed'))
+      // Extract cover
+      let coverSrc =
+        $('img').first().attr('src') || $('img').first().attr('data-src');
+      if (!coverSrc) {
+        coverSrc = $('meta[property="og:image"]').attr('content');
+      }
+      if (coverSrc) {
+        novel.cover = coverSrc.startsWith('http')
+          ? coverSrc
+          : this.site + coverSrc;
+      }
+
+      // Extract author
+      const authorText = $('body').text();
+      const authorMatch =
+        authorText.match(/Author[:\s]+([^\n]+)/i) ||
+        authorText.match(/By[:\s]+([^\n]+)/i);
+      if (authorMatch) {
+        novel.author = authorMatch[1].trim();
+      }
+
+      // Extract synopsis
+      const synopsisEl = $('.synopsis, .summary, p')
+        .filter((i, el) => {
+          const text = $(el).text();
+          return text.length > 100; // Find substantial text blocks
+        })
+        .first();
+      if (synopsisEl.length) {
+        novel.summary = synopsisEl.text().trim();
+      }
+
+      // Extract status
+      const statusText = $('body').text().toLowerCase();
+      if (statusText.includes('completed') || statusText.includes('complete')) {
         novel.status = NovelStatus.Completed;
-      else if (statusText) novel.status = NovelStatus.Ongoing;
+      } else if (
+        statusText.includes('ongoing') ||
+        statusText.includes('updating')
+      ) {
+        novel.status = NovelStatus.Ongoing;
+      }
 
-      const genres = $('.genres, .tags, .series-genres, .post-tags')
-        .first()
-        .text()
-        .trim();
-      if (genres) novel.genres = genres;
-
-      // Author
-      const author = $('.author, .series-author, .post-author')
-        .first()
-        .text()
-        .trim();
-      if (author) novel.author = author;
-
-      // Chapters: parse releases or chapter lists
-      const chapters: Plugin.ChapterItem[] = [];
-      const chapterContainers = [
-        '#releases',
-        '.releases',
-        '#chapter-list',
-        '.chapter-list',
-        '.chapters',
-        '.series-chapters',
-        '.list-chapters',
-        '.post-content',
-      ];
-
-      let foundChapters = false;
-      for (const sel of chapterContainers) {
-        const container = $(sel);
-        if (!container || !container.length) continue;
-        container.find('a[href]').each((i, el) => {
-          const a = $(el);
-          const href = a.attr('href') || '';
-          if (!href) return;
-          const abs = this.resolveUrl(href);
-          if (!abs.includes('/series/')) return;
-          const t = (a.text() || a.attr('title') || '').trim() || abs;
-          chapters.push({
-            name: t,
-            path: abs.replace(this.site, '/'),
-            releaseTime: '',
-            chapterNumber: 0,
-          });
-        });
-        if (chapters.length) {
-          foundChapters = true;
-          break;
+      // Extract tags/genres
+      const tags: string[] = [];
+      $('a[href*="/tag/"], .tag, .genre').each((i, el) => {
+        const tag = $(el).text().trim();
+        if (tag && tag.length > 0) {
+          tags.push(tag);
         }
+      });
+      if (tags.length > 0) {
+        novel.genres = tags.join(', ');
       }
 
-      // Fallback: scan all links for chapter-like patterns
-      if (!foundChapters) {
-        const seen = new Set<string>();
-        $('a[href*="/series/"]').each((i, el) => {
-          const a = $(el);
-          const href = a.attr('href') || '';
-          const abs = this.resolveUrl(href);
-          // match patterns like /series/12345/1/ or /series/12345/v1/1.1
-          if (!abs.match(/\/series\/\d+\/(.+)?/)) return;
-          // try to filter out the overview link itself
-          if (abs.replace(/\/+$/, '') === url.replace(/\/+$/, '')) return;
-          if (seen.has(abs)) return;
-          seen.add(abs);
-          const t = (a.text() || a.attr('title') || '').trim() || abs;
-          chapters.push({
-            name: t,
-            path: abs.replace(this.site, '/'),
-            releaseTime: '',
-            chapterNumber: 0,
-          });
+      // Extract chapters
+      // ReadHive uses format: /series/{id}/v{vol}/{chapter}/
+      // Examples: /series/44854/v1/0/, /series/44854/v3/12.4/
+      const chapters: Plugin.ChapterItem[] = [];
+      const seen = new Set<string>();
+
+      $('a[href*="/series/"]').each((i, el) => {
+        const href = $(el).attr('href');
+        if (!href) return;
+
+        // Match chapter URLs: /series/{id}/v{vol}/{chapter}
+        const match = href.match(/\/series\/\d+\/(v\d+)\/([^\/]+)\/?$/);
+        if (!match) return;
+
+        const fullPath = href.replace(this.site, '');
+        if (seen.has(fullPath)) return;
+        seen.add(fullPath);
+
+        // Get chapter title
+        let chapterTitle = $(el).text().trim();
+        if (!chapterTitle || chapterTitle.length < 2) {
+          // Try parent container
+          chapterTitle = $(el)
+            .closest('li, .chapter, .item')
+            .text()
+            .trim()
+            .split('\n')[0]
+            .trim();
+        }
+        if (!chapterTitle || chapterTitle.length < 2) {
+          chapterTitle = `${match[1]} Ch ${match[2]}`;
+        }
+
+        // Get release time if available
+        let releaseTime = '';
+        const timeEl = $(el)
+          .closest('li, .chapter, .item')
+          .find('time, .date, .time, small')
+          .first();
+        if (timeEl.length) {
+          releaseTime = timeEl.text().trim();
+        }
+
+        chapters.push({
+          name: chapterTitle,
+          path: fullPath,
+          releaseTime: releaseTime,
+          chapterNumber: 0, // Will be set later
         });
-      }
-
-      // Dedupe while preserving order
-      const unique: Plugin.ChapterItem[] = [];
-      const seenUrls = new Set<string>();
-      for (const c of chapters) {
-        if (seenUrls.has(c.path)) continue;
-        seenUrls.add(c.path);
-        unique.push(c);
-      }
-
-      // Heuristic sort: extract numeric chapter id from URL or title
-      function extractNum(u: string): number | null {
-        // try to match trailing /{number}/ or v{num}/{num} or /v1/1.1
-        const m1 = u.match(/\/(\d+(?:\.\d+)?)(?:\/)?$/);
-        if (m1) return Number(m1[1]);
-        const m2 = u.match(/v\d+\/(\d+(?:\.\d+)?)/);
-        if (m2) return Number(m2[1]);
-        return null;
-      }
-      unique.sort((a, b) => {
-        const na = extractNum(a.path);
-        const nb = extractNum(b.path);
-        if (na !== null && nb !== null) return na - nb;
-        if (na !== null) return -1;
-        if (nb !== null) return 1;
-        return a.name.localeCompare(b.name);
       });
 
-      // Attempt to fill chapterNumber from order (descending to ascending).
-      for (let i = 0; i < unique.length; i++) {
-        // assign a reverse index so earlier chapters have lower numbers
-        unique[i].chapterNumber = i + 1;
-      }
+      // Sort chapters by volume and chapter number
+      chapters.sort((a, b) => {
+        // Extract volume and chapter numbers
+        const aMatch = a.path.match(/v(\d+)\/([^\/]+)/);
+        const bMatch = b.path.match(/v(\d+)\/([^\/]+)/);
 
-      novel.chapters = unique;
+        if (!aMatch || !bMatch) return 0;
+
+        const aVol = parseInt(aMatch[1]);
+        const bVol = parseInt(bMatch[1]);
+
+        if (aVol !== bVol) return aVol - bVol;
+
+        // Parse chapter numbers (handle decimals like 12.4)
+        const aChapter = parseFloat(aMatch[2]);
+        const bChapter = parseFloat(bMatch[2]);
+
+        return aChapter - bChapter;
+      });
+
+      // Assign chapter numbers
+      chapters.forEach((chapter, index) => {
+        chapter.chapterNumber = index + 1;
+      });
+
+      novel.chapters = chapters;
     } catch (err) {
-      console.error('ReadHive parseNovel error', err);
-      novel.chapters = novel.chapters || [];
+      console.error('ReadHive parseNovel error:', err);
     }
 
     return novel;
@@ -322,83 +267,158 @@ class ReadHivePlugin implements Plugin.PluginBase {
 
   async parseChapter(chapterPath: string): Promise<string> {
     try {
-      const url = this.resolveUrl(chapterPath);
+      const url = this.site + chapterPath;
       const response = await fetchApi(url);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
       const html = await response.text();
-      const $ = load(html);
+      const $ = loadCheerio(html);
 
-      // Title
-      let title = $('h1.chapter-title, .chapter-title, h1, .post-title')
-        .first()
-        .text()
-        .trim();
+      // Extract chapter title
+      const title = $('h1, h2').first().text().trim();
 
-      // Try common content selectors
+      // Extract chapter content
+      // Try multiple selectors for content
+      let content = '';
       const contentSelectors = [
         '.chapter-content',
-        '.entry-content',
-        '.post-content',
-        '.reader-content',
-        '#chapter-content',
         '.content',
+        '.entry-content',
         'article',
+        'main',
       ];
 
-      let contentHtml = '';
-      for (const sel of contentSelectors) {
-        const el = $(sel).first();
-        if (el && el.text().trim().length > 50) {
-          contentHtml = el.html() || '';
+      for (const selector of contentSelectors) {
+        const el = $(selector).first();
+        if (el.length && el.text().trim().length > 50) {
+          content = el.html() || '';
           break;
         }
       }
 
-      // If not found, pick largest text container
-      if (!contentHtml) {
-        let bestHtml = '';
-        let bestLen = 0;
+      // If no content found, try to find largest text block
+      if (!content) {
+        let maxLen = 0;
         $('div, section, article').each((i, el) => {
-          const txt = $(el).text() || '';
-          if (txt.length > bestLen) {
-            bestLen = txt.length;
-            bestHtml = $(el).html() || '';
+          const text = $(el).text();
+          if (text.length > maxLen && text.length > 100) {
+            maxLen = text.length;
+            content = $(el).html() || '';
           }
         });
-        contentHtml = bestHtml;
       }
 
-      if (!contentHtml) return '';
+      if (!content) {
+        return '<p>Chapter content not found</p>';
+      }
 
-      // Load content into cheerio to remove noise
-      const content$ = load(contentHtml);
+      // Clean up content
+      const content$ = loadCheerio(content);
 
-      // Remove scripts, iframes, share bars, ads, comments
+      // Remove unwanted elements
       content$(
-        'script, iframe, .share, .shares, .ads, .advert, .toc, .nav, .comments, style, noscript, .related',
+        'script, style, iframe, .ads, .ad, .advertisement, nav, .nav, .share, .comments',
       ).remove();
 
-      // Remove empty paragraphs
-      content$('p').each((i, el) => {
-        if ((content$(el).text() || '').trim().length === 0)
-          content$(el).remove();
-      });
-
-      // Make image src absolute
+      // Fix image paths
       content$('img').each((i, el) => {
-        const src =
-          content$(el).attr('src') || content$(el).attr('data-src') || '';
-        if (src) content$(el).attr('src', this.resolveUrl(src));
+        const src = content$(el).attr('src') || content$(el).attr('data-src');
+        if (src && !src.startsWith('http')) {
+          content$(el).attr('src', this.site + src);
+        }
       });
 
-      // Return cleaned HTML (title + content)
-      const cleaned = `<h1>${title || ''}</h1>\n${content$.html() || ''}`;
-      return cleaned;
+      // Combine title and content
+      const chapterHtml = `<h1>${title}</h1>\n${content$.html()}`;
+
+      return chapterHtml;
     } catch (err) {
-      console.error('ReadHive parseChapter error', err);
-      return '';
+      console.error('ReadHive parseChapter error:', err);
+      return '<p>Error loading chapter</p>';
     }
   }
+
+  async searchNovels(
+    searchTerm: string,
+    pageNo: number,
+  ): Promise<Plugin.NovelItem[]> {
+    const novels: Plugin.NovelItem[] = [];
+
+    try {
+      const url = `${this.site}/?s=${encodeURIComponent(searchTerm)}`;
+      const response = await fetchApi(url);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      const html = await response.text();
+      const $ = loadCheerio(html);
+
+      const seen = new Set<string>();
+
+      $('a[href*="/series/"]').each((i, el) => {
+        const href = $(el).attr('href');
+        if (!href) return;
+
+        // Match only series overview pages
+        const match = href.match(/\/series\/(\d+)\/?$/);
+        if (!match) return;
+
+        const seriesId = match[1];
+        const novelPath = `/series/${seriesId}/`;
+
+        if (seen.has(novelPath)) return;
+        seen.add(novelPath);
+
+        // Get title
+        let title = $(el).text().trim();
+        if (!title || title.length < 2) {
+          title = $(el)
+            .closest('.series-card, .novel-card, .card, .item')
+            .find('h2, h3, .title, .name')
+            .first()
+            .text()
+            .trim();
+        }
+        if (!title || title.length < 2) {
+          title = `Series ${seriesId}`;
+        }
+
+        // Get cover
+        let cover = defaultCover;
+        const img = $(el).find('img').first();
+        if (img.length) {
+          const src = img.attr('src') || img.attr('data-src');
+          if (src) {
+            cover = src.startsWith('http') ? src : this.site + src;
+          }
+        } else {
+          const parentImg = $(el)
+            .closest('.series-card, .novel-card, .card, .item')
+            .find('img')
+            .first();
+          if (parentImg.length) {
+            const src = parentImg.attr('src') || parentImg.attr('data-src');
+            if (src) {
+              cover = src.startsWith('http') ? src : this.site + src;
+            }
+          }
+        }
+
+        novels.push({
+          name: title,
+          path: novelPath,
+          cover: cover,
+        });
+      });
+
+      return novels;
+    } catch (err) {
+      console.error('ReadHive searchNovels error:', err);
+    }
+
+    return novels;
+  }
+
+  resolveUrl = (path: string, isNovel?: boolean) => this.site + path;
 }
 
 export default new ReadHivePlugin();
