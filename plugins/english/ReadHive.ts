@@ -106,3 +106,4 @@ class ReadHivePlugin implements Plugin.PluginBase {
 }
 
 export default new ReadHivePlugin();
+module.exports = new ReadHivePlugin();

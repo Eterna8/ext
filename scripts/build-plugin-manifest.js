@@ -107,15 +107,22 @@ for (let language in languages) {
       `${COMPILED_PLUGIN_DIR}/${language.toLowerCase()}/${plugin}`,
       'utf-8',
     );
-    const instance = Function(
-      'require',
-      'module',
-      `const exports = module.exports = {}; 
-      ${rawCode}; 
-      return exports.default`,
-    )(_require, {});
+    let instance;
+    try {
+      instance = Function(
+        'require',
+        'module',
+        `const exports = module.exports = {};
+        ${rawCode};
+        return exports.default`,
+      )(_require, {});
+    } catch (error) {
+      console.error(`Error evaluating ${plugin}: ${error.message}`);
+      console.log(`Skipping ${plugin} due to syntax error`);
+      return;
+    }
     const { id, name, site, version, icon, customJS, customCSS, filters } =
-      instance;
+      instance || {};
     const normalisedName = name.replace(/\[.*\]/, '');
 
     // --only-new logic
