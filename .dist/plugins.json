@@ -1019,6 +1019,15 @@
 		"iconUrl": "http://localhost:3000/public/static/src/en/readfrom/icon.png"
 	},
 	{
+		"id": "readhive",
+		"name": "ReadHive",
+		"site": "https://readhive.org",
+		"lang": "English",
+		"version": "1.0.5",
+		"url": "http://localhost:3000/.js/plugins/english/ReadHive.js",
+		"iconUrl": "http://localhost:3000/public/static/src/en/readhive/icon.png"
+	},
+	{
 		"id": "readnovelfull",
 		"name": "ReadNovelFull",
 		"site": "https://readnovelfull.com/",
