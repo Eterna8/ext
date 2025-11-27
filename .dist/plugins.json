@@ -1023,7 +1023,7 @@
 		"name": "ReadHive",
 		"site": "https://readhive.org",
 		"lang": "English",
-		"version": "1.0.7",
+		"version": "1.2.0",
 		"url": "https://raw.githubusercontent.com/Eterna8/ext/master/.js/src/plugins/english/ReadHive.js",
 		"iconUrl": "https://raw.githubusercontent.com/Eterna8/ext/master/public/static/src/en/readhive/icon.png"
 	},
