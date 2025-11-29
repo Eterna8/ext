@@ -5,8 +5,8 @@
 		"site": "https://bellerepository.com/",
 		"lang": "English",
 		"version": "1.0.2",
-		"url": "https://raw.githubusercontent.com/Eterna8/ext/master/plugins/english/BelleRepository.ts",
-		"iconUrl": "https://raw.githubusercontent.com/Eterna8/ext/master/plugins/english/bellerepository/src/en/bellerepository/icon.png"
+		"url": "https://raw.githubusercontent.com/Eterna8/ext/master/.js/src/plugins/english/BelleRepository.js",
+		"iconUrl": "https://raw.githubusercontent.com/Eterna8/ext/master/public/static/src/en/bellerepository/icon.png"
 	},
 	{
 		"id": "readhive",
@@ -14,7 +14,7 @@
 		"site": "https://readhive.org",
 		"lang": "English",
 		"version": "2.0.0",
-		"url": "https://raw.githubusercontent.com/Eterna8/ext/master/plugins/english/ReadHive.ts",
-		"iconUrl": "https://raw.githubusercontent.com/Eterna8/ext/master/plugins/english/readhive/src/en/readhive/icon.jpg"
+		"url": "https://raw.githubusercontent.com/Eterna8/ext/master/.js/src/plugins/english/ReadHive.js",
+		"iconUrl": "https://raw.githubusercontent.com/Eterna8/ext/master/public/static/src/en/readhive/icon.jpg"
 	}
 ]
