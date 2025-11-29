@@ -8,6 +8,7 @@ config.json
 plugins/*/*\[*\]*.ts
 
 # ignore dist stuffs
+.js
 .dist
 .DS_Store
 dist

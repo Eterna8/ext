@@ -5,7 +5,11 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-
+    "clean:multisrc": "find . -type f -wholename \"*plugins*\\[*\\]*.[t,j]s\" -delete",
+    "clean:multisrc:windows": "powershell -Command \"Get-ChildItem -Recurse -Include \\\"*].ts\\\",\\\"*].js\\\" | Where-Object { $_.FullName -like \\\"*plugins*\\\" } | Remove-Item\"",
+    "dev": "vite",
+    "dev:start": "node ./plugins/multisrc/generate-multisrc-plugins.js && node scripts/generate-plugin-index.js && vite",
+    "build:multisrc": "node ./plugins/multisrc/generate-multisrc-plugins.js",
     "build:compile": "npx tsc --project tsconfig.production.json",
     "build:manifest": "node ./scripts/build-plugin-manifest.js",
     "build:manifest:dev": "node --env-file=.env ./scripts/build-plugin-manifest.js",
@@ -14,7 +18,6 @@
     "publish:plugins": "chmod +x ./scripts/publish-plugins.sh && ./scripts/publish-plugins.sh",
     "publish:plugins:windows": "powershell ./scripts/publish-plugins.ps1",
     "serve:dev": "npm run build:compile && npm run build:manifest:dev && serve",
-    "dev:start": "vite",
     "lint": "npx eslint .",
     "lint:fix": "npx eslint . --fix",
     "format": "prettier --write \"./**/*.{js,ts}\"",
