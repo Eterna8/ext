@@ -204,19 +204,20 @@ if (!ONLY_NEW)
 
 // check for broken plugins
 for (let language in languages) {
-  const tsFiles = fs.readdirSync(
-    path.join('./plugins', language.toLocaleLowerCase()),
-  );
-  tsFiles
-    .filter(f => f.endsWith('.broken.ts'))
-    .forEach(fn => {
-      console.error(
-        language.toLocaleLowerCase() +
-          '/' +
-          fn.replace('.broken.ts', '') +
-          ' ❌',
-      );
-    });
+  const p = path.join('./plugins', language.toLocaleLowerCase());
+  if (fs.existsSync(p)) {
+    const tsFiles = fs.readdirSync(p);
+    tsFiles
+      .filter(f => f.endsWith('.broken.ts'))
+      .forEach(fn => {
+        console.error(
+          language.toLocaleLowerCase() +
+            '/' +
+            fn.replace('.broken.ts', '') +
+            ' ❌',
+        );
+      });
+  }
 }
 
 console.log(jsonPath);
