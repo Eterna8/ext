@@ -1,7 +1,6 @@
 import { Plugin } from '@/types/plugin';
-import BelleRepository from '@plugins/english/BelleRepository';
-import ReadHive from '@plugins/english/ReadHive';
+import p_0 from '@plugins/english/BelleRepository';
+import p_1 from '@plugins/english/ReadHive';
 
-const plugins: Plugin.PluginBase[] = [BelleRepository, ReadHive];
-
-export default plugins;
+const PLUGINS: Plugin.PluginBase[] = [p_0, p_1];
+export default PLUGINS;
