@@ -8,19 +8,15 @@ import dayjs from 'dayjs';
 const includesAny = (str: string, keywords: string[]) =>
   new RegExp(keywords.join('|')).test(str);
 
-import { Filters } from '@libs/filterInputs';
 class BelleRepositoryPlugin implements Plugin.PluginBase {
   id = 'bellerepository';
   name = 'Belle Repository';
   icon = 'src/en/bellerepository/icon.png';
   site = 'https://bellerepository.com/';
-  version = '1.0.3';
-  filters: Filters | undefined = undefined;
+  version = '1.0.2';
+  filters = [];
 
-  private async getCheerio(
-    url: string,
-    search: boolean = false,
-  ): Promise<CheerioAPI> {
+  private async getCheerio(url: string, search = false): Promise<CheerioAPI> {
     const r = await fetchApi(url);
     if (!r.ok && !search) {
       throw new Error(

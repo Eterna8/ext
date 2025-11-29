@@ -1,0 +1,10 @@
+{
+  "name": "@libs",
+  "type": "module",
+  "exports": {
+    "./fetch": "./fetch.js",
+    "./defaultCover": "./defaultCover.js",
+    "./plugin": "./plugin.js",
+    "./novelStatus": "./novelStatus.js"
+  }
+}

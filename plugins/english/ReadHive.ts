@@ -3,12 +3,11 @@ import { Plugin } from '@/types/plugin';
 import { Filters } from '@libs/filterInputs';
 import { load as loadCheerio } from 'cheerio';
 import { defaultCover } from '@libs/defaultCover';
-import { NovelStatus } from '@libs/novelStatus';
 
 class ReadHivePlugin implements Plugin.PluginBase {
   id = 'readhive';
   name = 'ReadHive';
-  icon = 'src/en/readhive/readhive.jpg';
+  icon = 'src/en/readhive/icon.jpg';
   site = 'https://readhive.org';
   version = '2.0.0';
   filters: Filters | undefined = undefined;
@@ -22,52 +21,55 @@ class ReadHivePlugin implements Plugin.PluginBase {
     pageNo: number,
     options: Plugin.PopularNovelsOptions<typeof this.filters>,
   ): Promise<Plugin.NovelItem[]> {
-    const novels: Plugin.NovelItem[] = [];
-    if (pageNo > 1) return novels;
+    if (pageNo > 1) return [];
 
     const url = this.site;
     const result = await fetchApi(url);
     const body = await result.text();
     const $ = loadCheerio(body);
 
-    if (options.showLatestNovels) {
-      $('h2:contains("Latest Updates")')
-        .next('div.flex.flex-wrap')
-        .children('div.flex.flex-col.w-full.px-2.mb-4')
-        .each((i, el) => {
-          const name = $(el).find('a.text-lg.font-medium').text().trim();
-          const path = $(el).find('a.peer').attr('href');
-          let cover = $(el).find('img').attr('src');
+    const novels: Plugin.NovelItem[] = [];
+    const processedPaths = new Set<string>();
 
-          if (cover && !cover.startsWith('http')) {
-            cover = this.resolveUrl(cover);
-          }
-          if (path) {
+    if (options.showLatestNovels) {
+      // Latest Updates section
+      $('h2:contains("Latest Updates")')
+        .next('.flex-wrap')
+        .find('.px-2.mb-4')
+        .each((i, el) => {
+          const path = $(el).find('a.peer').attr('href');
+          if (path && !processedPaths.has(path)) {
+            const name = $(el).find('a.text-lg').text().trim();
+            let cover = $(el).find('img').attr('src');
+            if (cover && !cover.startsWith('http')) {
+              cover = this.resolveUrl(cover);
+            }
             novels.push({ name, path, cover: cover || defaultCover });
+            processedPaths.add(path);
           }
         });
     } else {
-      $('h2:contains("Popular This Month")')
-        .nextAll('div')
-        .find('.swiper-slide.w-32.flex-shrink-0.group')
+      // Popular sections
+      $('h2:contains("Popular")')
+        .nextAll('.swiper')
+        .find('.swiper-slide')
         .each((i, el) => {
-          const name = $(el).find('h6.mt-2.text-sm.font-medium').text().trim();
           const path = $(el).find('a').attr('href');
-          let cover = $(el).find('img').attr('src');
-
-          if (cover && !cover.startsWith('http')) {
-            cover = this.resolveUrl(cover);
-          }
-          if (path) {
-            if (!novels.some(novel => novel.path === path)) {
-              novels.push({ name, path, cover: cover || defaultCover });
+          if (path && !processedPaths.has(path)) {
+            const name = $(el).find('h6').text().trim();
+            let cover = $(el).find('img').attr('src');
+            if (cover && !cover.startsWith('http')) {
+              cover = this.resolveUrl(cover);
             }
+            novels.push({ name, path, cover: cover || defaultCover });
+            processedPaths.add(path);
           }
         });
     }
 
     return novels;
   }
+
   async searchNovels(
     searchTerm: string,
     pageNo: number,
@@ -77,81 +79,67 @@ class ReadHivePlugin implements Plugin.PluginBase {
     const body = await result.text();
     const $ = loadCheerio(body);
 
-    const novels: Plugin.NovelItem[] = [];
-    $('div.col-6.col-md-3.mb-4').each((i, el) => {
-      const name = $(el).find('h5').text().trim();
-      const path = $(el).find('a').attr('href');
-      let cover = $(el).find('img').attr('src');
+    return $('div.col-6.col-md-3.mb-4')
+      .map((i, el) => {
+        const path = $(el).find('a').attr('href');
+        if (!path) return null;
 
-      if (cover && !cover.startsWith('http')) {
-        cover = this.resolveUrl(cover);
-      }
-      if (path) {
-        novels.push({ name, path, cover: cover || defaultCover });
-      }
-    });
-    return novels;
+        const name = $(el).find('h5').text().trim();
+        let cover = $(el).find('img').attr('src');
+        if (cover && !cover.startsWith('http')) {
+          cover = this.resolveUrl(cover);
+        }
+        return { name, path, cover: cover || defaultCover };
+      })
+      .get()
+      .filter(Boolean) as Plugin.NovelItem[];
   }
 
   async parseNovel(novelPath: string): Promise<Plugin.SourceNovel> {
-    const novel: Plugin.SourceNovel = {
-      path: novelPath,
-      name: 'UNKNOWN',
-      chapters: [],
-    };
     const url = this.resolveUrl(novelPath);
     const result = await fetchApi(url);
     const body = await result.text();
     const $ = loadCheerio(body);
 
-    novel.name = $(
-      'h1.flex-grow.flex-shrink.mb-1.text-2xl.font-bold.lg:text-3xl.line-clamp-4',
-    )
-      .text()
-      .trim();
-    novel.cover = this.resolveUrl(
-      $(
-        'div.aspect-w-3.aspect-h-4.lg:aspect-w-4.lg:aspect-h-6.rounded.overflow-hidden img',
-      ).attr('src') || defaultCover,
+    const name = $('h1[class*="text-2xl"]').first().text().trim();
+    const cover =
+      $('img[alt*="Cover"]').attr('src') ||
+      $('img[alt*="Thumbnail"]').attr('src') ||
+      defaultCover;
+
+    const novel: Plugin.SourceNovel = {
+      path: novelPath,
+      name: name,
+      cover: this.resolveUrl(cover),
+      author: $('span.leading-7').text().trim(),
+      summary: $('h2:contains("Synopsis")').next('div').find('p').text().trim(),
+      genres: $('div.flex-wrap a[href*="/genre/"]')
+        .map((i, el) => $(el).text())
+        .get()
+        .join(', '),
+      chapters: [],
+    };
+
+    const chapterElements = $('div[x-show="tab === \'releases\'"]').find(
+      'a[href*="/series/"]',
     );
-    novel.author = $('span.leading-7.md:text-xl').text().trim();
 
-    const summaryParagraphs: string[] = [];
-    $('h2:contains("Synopsis")')
-      .next('div.mb-4')
-      .find('p')
-      .each((i, el) => {
-        summaryParagraphs.push($(el).text().trim());
-      });
-    novel.summary = summaryParagraphs.join('\n');
+    const chapters: Plugin.ChapterItem[] = chapterElements
+      .map((i, el) => {
+        const path = $(el).attr('href');
+        if (!path) return null;
 
-    const genres: string[] = [];
-    $(
-      'div.flex.flex-wrap a.px-3.py-1.mb-1.mr-2.text-sm.text-foreground.bg-shade.rounded.shadow-md.hover:bg-red.hover:text-white',
-    ).each(function () {
-      genres.push($(this).text());
-    });
-    novel.genres = genres.join(', ');
-
-    const chapters: Plugin.ChapterItem[] = [];
-    $('h3:contains("Table of Contents")')
-      .next(
-        'div.p-2.overflow-hidden.border.border-accent-border.rounded.shadow',
-      )
-      .find('a.flex.items-center.p-2.rounded.bg-accent.hover:bg-accent-hover')
-      .each((i, el) => {
         const chapterName = $(el).find('span.ml-1').text().trim();
-        const chapterPath = $(el).attr('href');
         const releaseTime = $(el).find('span.text-xs').text().trim();
 
-        if (chapterPath) {
-          chapters.push({
-            name: chapterName,
-            path: chapterPath.replace(this.site, ''),
-            releaseTime: releaseTime,
-          });
-        }
-      });
+        return {
+          name: chapterName,
+          path: path.replace(this.site, ''),
+          releaseTime: releaseTime,
+        };
+      })
+      .get()
+      .filter(Boolean) as Plugin.ChapterItem[];
 
     novel.chapters = chapters;
     return novel;
@@ -163,12 +151,21 @@ class ReadHivePlugin implements Plugin.PluginBase {
     const body = await result.text();
     const $ = loadCheerio(body);
 
-    const content = $('div.relative.lg:grid-in-content.mt-4');
+    const content = $(
+      'div[class*="lg:grid-in-content"] div[style*="font-size"]',
+    );
+
+    content.find('div[data-fuse]').remove();
     content.find('div.socials').remove();
     content.find('div.reader-settings').remove();
     content.find('div.nav-wrapper').remove();
-    content.find('div.code-block').remove(); // Remove code blocks
-    content.find('p:contains("• • •")').remove(); // Remove specific separator
+    content.find('p:contains("• • •")').remove();
+
+    content.find('p').each((i, el) => {
+      if ($(el).html()?.trim() === '&nbsp;' || $(el).html()?.trim() === '') {
+        $(el).remove();
+      }
+    });
 
     return content.html() || '';
   }

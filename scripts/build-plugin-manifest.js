@@ -87,6 +87,9 @@ const _require = () => proxy;
 const COMPILED_PLUGIN_DIR = './.js/plugins';
 
 for (let language in languages) {
+  if (language.toLowerCase() !== 'english') {
+    continue;
+  }
   console.log(
     ` ${language} `
       .padStart(Math.floor((language.length + 32) / 2), '=')
@@ -202,22 +205,23 @@ if (!ONLY_NEW)
     `,
   );
 
-// check for broken plugins
 for (let language in languages) {
-  const p = path.join('./plugins', language.toLocaleLowerCase());
-  if (fs.existsSync(p)) {
-    const tsFiles = fs.readdirSync(p);
-    tsFiles
-      .filter(f => f.endsWith('.broken.ts'))
-      .forEach(fn => {
-        console.error(
-          language.toLocaleLowerCase() +
-            '/' +
-            fn.replace('.broken.ts', '') +
-            ' ❌',
-        );
-      });
+  if (language.toLowerCase() !== 'english') {
+    continue;
   }
+  const tsFiles = fs.readdirSync(
+    path.join('./plugins', language.toLocaleLowerCase()),
+  );
+  tsFiles
+    .filter(f => f.endsWith('.broken.ts'))
+    .forEach(fn => {
+      console.error(
+        language.toLocaleLowerCase() +
+          '/' +
+          fn.replace('.broken.ts', '') +
+          ' ❌',
+      );
+    });
 }
 
 console.log(jsonPath);
@@ -231,6 +235,9 @@ const totalPluginsWithFilter = Object.values(
 console.warn('\n| Language | Plugins (With Filters) |');
 console.warn('|----------|------------------------|');
 for (const language of Object.keys(languages)) {
+  if (language.toLowerCase() !== 'english') {
+    continue;
+  }
   console.warn(
     `| ${language} | ${pluginsPerLanguage[language] || 0} (${pluginsWithFiltersPerLanguage[language] || 0}) |`,
   );
