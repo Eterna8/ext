@@ -72,15 +72,17 @@ class ReadHivePlugin implements Plugin.PluginBase {
     searchTerm: string,
     pageNo: number,
   ): Promise<Plugin.NovelItem[]> {
-    // ReadHive doesn't paginate search results
-    if (pageNo > 1) return [];
-
-    // Build the exact FormData payload
+    // Build the FormData payload
     const form = new FormData();
     form.append('search', searchTerm);
     form.append('orderBy', 'recent');
     form.append('post', '60916bbfb9');
     form.append('action', 'fetch_browse');
+
+    // Add page parameter if not the first page
+    if (pageNo > 1) {
+      form.append('page', pageNo.toString());
+    }
 
     const result = await fetchApi(`${this.site}/ajax`, {
       method: 'POST',
