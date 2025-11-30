@@ -39,23 +39,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var cheerio_1 = require("cheerio");
 var fetch_1 = require("@libs/fetch");
+var cheerio_1 = require("cheerio");
 var defaultCover_1 = require("@libs/defaultCover");
 var novelStatus_1 = require("@libs/novelStatus");
 var dayjs_1 = __importDefault(require("dayjs"));
+var storage_1 = require("@libs/storage");
 var includesAny = function (str, keywords) {
     return new RegExp(keywords.join('|')).test(str);
 };
-var BelleRepositoryPlugin = /** @class */ (function () {
-    function BelleRepositoryPlugin() {
-        var _this = this;
-        this.id = 'bellerepository';
-        this.name = 'Belle Repository';
-        this.icon = 'src/en/bellerepository/mainducky.png';
-        this.site = 'https://bellerepository.com/';
-        this.version = '1.0.2';
-        this.filters = [];
+var MadaraPlugin = /** @class */ (function () {
+    function MadaraPlugin(metadata) {
+        var _a, _b;
+        this.hideLocked = storage_1.storage.get('hideLocked');
         this.parseData = function (date) {
             var _a;
             var dayJSDate = (0, dayjs_1.default)(); // today
@@ -123,31 +119,79 @@ var BelleRepositoryPlugin = /** @class */ (function () {
             }
             return dayJSDate.format('LL');
         };
-        this.resolveUrl = function (path, isNovel) {
-            if (path.startsWith('http')) {
-                return path;
-            }
-            return _this.site + path.replace(/^\//, '');
-        };
+        this.id = metadata.id;
+        this.name = metadata.sourceName;
+        this.icon = "multisrc/madara/".concat(metadata.id.toLowerCase(), "/icon.png");
+        this.site = metadata.sourceSite;
+        var versionIncrements = ((_a = metadata.options) === null || _a === void 0 ? void 0 : _a.versionIncrements) || 0;
+        this.version = "1.0.".concat(8 + versionIncrements);
+        this.options = metadata.options;
+        this.filters = metadata.filters;
+        if ((_b = this.options) === null || _b === void 0 ? void 0 : _b.hasLocked) {
+            this.pluginSettings = {
+                hideLocked: {
+                    value: '',
+                    label: 'Hide locked chapters',
+                    type: 'Switch',
+                },
+            };
+        }
     }
-    BelleRepositoryPlugin.prototype.getCheerio = function (url_1) {
-        return __awaiter(this, arguments, void 0, function (url, search) {
+    MadaraPlugin.prototype.translateDragontea = function (text) {
+        var _a;
+        if (this.id !== 'dragontea')
+            return text;
+        var $ = (0, cheerio_1.load)(((_a = text
+            .html()) === null || _a === void 0 ? void 0 : _a.replace('\n', '').replace(/<br\s*\/?>/g, '\n')) || '');
+        var reverseAlpha = 'zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA';
+        var forwardAlpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        text.html($.html());
+        text
+            .find('*')
+            .addBack()
+            .contents()
+            .filter(function (_, el) { return el.nodeType === 3; })
+            .each(function (_, el) {
+            var $el = $(el);
+            var translated = $el
+                .text()
+                .normalize('NFD')
+                .split('')
+                .map(function (char) {
+                var base = char.normalize('NFC');
+                var idx = forwardAlpha.indexOf(base);
+                return idx >= 0
+                    ? reverseAlpha[idx] + char.slice(base.length)
+                    : char;
+            })
+                .join('');
+            $el.replaceWith(translated.replace('\n', '<br>'));
+        });
+        return text;
+    };
+    MadaraPlugin.prototype.getHostname = function (url) {
+        url = url.split('/')[2];
+        var url_parts = url.split('.');
+        url_parts.pop(); // remove TLD
+        return url_parts.join('.');
+    };
+    MadaraPlugin.prototype.getCheerio = function (url, search) {
+        return __awaiter(this, void 0, void 0, function () {
             var r, $, _a, title;
-            if (search === void 0) { search = false; }
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4 /*yield*/, (0, fetch_1.fetchApi)(url)];
                     case 1:
                         r = _b.sent();
-                        if (!r.ok && !search) {
+                        if (!r.ok && search != true)
                             throw new Error('Could not reach site (' + r.status + ') try to open in webview.');
-                        }
                         _a = cheerio_1.load;
                         return [4 /*yield*/, r.text()];
                     case 2:
                         $ = _a.apply(void 0, [_b.sent()]);
                         title = $('title').text().trim();
-                        if (title == 'Bot Verification' ||
+                        if (this.getHostname(url) != this.getHostname(r.url) ||
+                            title == 'Bot Verification' ||
                             title == 'You are being redirected...' ||
                             title == 'Un instant...' ||
                             title == 'Just a moment...' ||
@@ -158,22 +202,19 @@ var BelleRepositoryPlugin = /** @class */ (function () {
             });
         });
     };
-    BelleRepositoryPlugin.prototype.parseNovelsFromPage = function (loadedCheerio) {
+    MadaraPlugin.prototype.parseNovels = function (loadedCheerio) {
         var novels = [];
         loadedCheerio('.manga-title-badges').remove();
-        loadedCheerio('.page-item-detail, .c-tabs-item__content, .manga-slider .slider__item').each(function (index, element) {
+        loadedCheerio('.page-item-detail, .c-tabs-item__content').each(function (index, element) {
             var novelName = loadedCheerio(element)
-                .find('.post-title, .manga-title, h3')
-                .first()
+                .find('.post-title')
                 .text()
                 .trim();
-            var novelUrl = loadedCheerio(element)
-                .find('.post-title a, .manga-title a, a')
-                .first()
-                .attr('href') || '';
+            var novelUrl = loadedCheerio(element).find('.post-title').find('a').attr('href') ||
+                '';
             if (!novelName || !novelUrl)
                 return;
-            var image = loadedCheerio(element).find('img').first();
+            var image = loadedCheerio(element).find('img');
             var novelCover = image.attr('data-src') ||
                 image.attr('src') ||
                 image.attr('data-lazy-srcset') ||
@@ -187,58 +228,62 @@ var BelleRepositoryPlugin = /** @class */ (function () {
         });
         return novels;
     };
-    BelleRepositoryPlugin.prototype.popularNovels = function (pageNo, options) {
-        return __awaiter(this, void 0, void 0, function () {
-            var url, loadedCheerio, error_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+    MadaraPlugin.prototype.popularNovels = function (pageNo_1, _a) {
+        return __awaiter(this, arguments, void 0, function (pageNo, _b) {
+            var url, key, _i, _c, value, loadedCheerio;
+            var filters = _b.filters, showLatestNovels = _b.showLatestNovels;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
                         url = this.site + '/page/' + pageNo + '/?s=&post_type=wp-manga';
-                        if (options === null || options === void 0 ? void 0 : options.showLatestNovels) {
+                        if (!filters)
+                            filters = this.filters || {};
+                        if (showLatestNovels)
                             url += '&m_orderby=latest';
+                        for (key in filters) {
+                            if (typeof filters[key].value === 'object')
+                                for (_i = 0, _c = filters[key].value; _i < _c.length; _i++) {
+                                    value = _c[_i];
+                                    url += "&".concat(key, "=").concat(value);
+                                }
+                            else if (filters[key].value)
+                                url += "&".concat(key, "=").concat(filters[key].value);
                         }
                         return [4 /*yield*/, this.getCheerio(url, pageNo != 1)];
                     case 1:
-                        loadedCheerio = _a.sent();
-                        return [2 /*return*/, this.parseNovelsFromPage(loadedCheerio)];
-                    case 2:
-                        error_1 = _a.sent();
-                        console.error('BelleRepository: Error in popularNovels:', error_1);
-                        return [2 /*return*/, []];
-                    case 3: return [2 /*return*/];
+                        loadedCheerio = _d.sent();
+                        return [2 /*return*/, this.parseNovels(loadedCheerio)];
                 }
             });
         });
     };
-    BelleRepositoryPlugin.prototype.parseNovel = function (novelPath) {
+    MadaraPlugin.prototype.parseNovel = function (novelPath) {
         return __awaiter(this, void 0, void 0, function () {
-            var loadedCheerio_1, novel_1, chapters_1, html, _a, novelId, formData, totalChapters_1, error_2;
+            var loadedCheerio, novel, chapters, html, novelId, formData, totalChapters;
             var _this = this;
+            var _a;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0:
-                        _b.trys.push([0, 8, , 9]);
-                        return [4 /*yield*/, this.getCheerio(this.site + novelPath, false)];
+                    case 0: return [4 /*yield*/, this.getCheerio(this.site + novelPath, false)];
                     case 1:
-                        loadedCheerio_1 = _b.sent();
-                        loadedCheerio_1('.manga-title-badges, #manga-title span').remove();
-                        novel_1 = {
+                        loadedCheerio = _b.sent();
+                        loadedCheerio('.manga-title-badges, #manga-title span').remove();
+                        novel = {
                             path: novelPath,
-                            name: loadedCheerio_1('.post-title h1').text().trim() ||
-                                loadedCheerio_1('#manga-title h1').text().trim() ||
-                                loadedCheerio_1('.manga-title').text().trim() ||
+                            name: loadedCheerio('.post-title h1').text().trim() ||
+                                loadedCheerio('#manga-title h1').text().trim() ||
+                                loadedCheerio('.manga-title').text().trim() ||
                                 '',
                         };
-                        novel_1.cover =
-                            loadedCheerio_1('.summary_image > a > img').attr('data-lazy-src') ||
-                                loadedCheerio_1('.summary_image > a > img').attr('data-src') ||
-                                loadedCheerio_1('.summary_image > a > img').attr('src') ||
+                        novel.cover =
+                            loadedCheerio('.summary_image > a > img').attr('data-lazy-src') ||
+                                loadedCheerio('.summary_image > a > img').attr('data-src') ||
+                                loadedCheerio('.summary_image > a > img').attr('src') ||
                                 defaultCover_1.defaultCover;
-                        loadedCheerio_1('.post-content_item, .post-content').each(function () {
-                            var detailName = loadedCheerio_1(this).find('h5').text().trim();
-                            var detail = loadedCheerio_1(this).find('.summary-content') ||
-                                loadedCheerio_1(this).find('.summary_content');
+                        loadedCheerio('.post-content_item, .post-content').each(function () {
+                            var detailName = loadedCheerio(this).find('h5').text().trim();
+                            var detail = loadedCheerio(this).find('.summary-content') ||
+                                loadedCheerio(this).find('.summary_content');
                             switch (detailName) {
                                 case 'Genre(s)':
                                 case 'Genre':
@@ -248,18 +293,18 @@ var BelleRepositoryPlugin = /** @class */ (function () {
                                 case 'Género(s)':
                                 case 'Kategori':
                                 case 'التصنيفات':
-                                    if (novel_1.genres)
-                                        novel_1.genres +=
+                                    if (novel.genres)
+                                        novel.genres +=
                                             ', ' +
                                                 detail
                                                     .find('a')
-                                                    .map(function (i, el) { return loadedCheerio_1(el).text(); })
+                                                    .map(function (i, el) { return loadedCheerio(el).text(); })
                                                     .get()
                                                     .join(', ');
                                     else
-                                        novel_1.genres = detail
+                                        novel.genres = detail
                                             .find('a')
-                                            .map(function (i, el) { return loadedCheerio_1(el).text(); })
+                                            .map(function (i, el) { return loadedCheerio(el).text(); })
                                             .get()
                                             .join(', ');
                                     break;
@@ -268,80 +313,78 @@ var BelleRepositoryPlugin = /** @class */ (function () {
                                 case 'Autor(es)':
                                 case 'المؤلف':
                                 case 'المؤلف (ين)':
-                                    novel_1.author = detail.text().trim();
+                                    novel.author = detail.text().trim();
                                     break;
                                 case 'Status':
                                 case 'Novel':
                                 case 'Estado':
                                 case 'Durum':
-                                    novel_1.status =
+                                    novel.status =
                                         detail.text().trim().includes('OnGoing') ||
                                             detail.text().trim().includes('مستمرة')
                                             ? novelStatus_1.NovelStatus.Ongoing
                                             : novelStatus_1.NovelStatus.Completed;
                                     break;
                                 case 'Artist(s)':
-                                    novel_1.artist = detail.text().trim();
+                                    novel.artist = detail.text().trim();
                                     break;
                             }
                         });
                         // Checks for "Madara NovelHub" version
                         {
-                            if (!novel_1.genres)
-                                novel_1.genres = loadedCheerio_1('.genres-content').text().trim();
-                            if (!novel_1.status)
-                                novel_1.status = loadedCheerio_1('.manga-status')
+                            if (!novel.genres)
+                                novel.genres = loadedCheerio('.genres-content').text().trim();
+                            if (!novel.status)
+                                novel.status = loadedCheerio('.manga-status')
                                     .text()
                                     .trim()
                                     .includes('OnGoing')
                                     ? novelStatus_1.NovelStatus.Ongoing
                                     : novelStatus_1.NovelStatus.Completed;
-                            if (!novel_1.author)
-                                novel_1.author = loadedCheerio_1('.manga-author a').text().trim();
-                            if (!novel_1.rating)
-                                novel_1.rating = parseFloat(loadedCheerio_1('.post-rating span').text().trim());
+                            if (!novel.author)
+                                novel.author = loadedCheerio('.manga-author a').text().trim();
+                            if (!novel.rating)
+                                novel.rating = parseFloat(loadedCheerio('.post-rating span').text().trim());
                         }
-                        if (!novel_1.author)
-                            novel_1.author = loadedCheerio_1('.manga-authors').text().trim();
-                        loadedCheerio_1('div.summary__content .code-block,script,noscript').remove();
-                        novel_1.summary =
-                            loadedCheerio_1('div.summary__content').text().trim() ||
-                                loadedCheerio_1('#tab-manga-about').text().trim() ||
-                                loadedCheerio_1('.post-content_item h5:contains("Summary")')
+                        if (!novel.author)
+                            novel.author = loadedCheerio('.manga-authors').text().trim();
+                        loadedCheerio('div.summary__content .code-block,script,noscript').remove();
+                        novel.summary =
+                            this.translateDragontea(loadedCheerio('div.summary__content'))
+                                .text()
+                                .trim() ||
+                                loadedCheerio('#tab-manga-about').text().trim() ||
+                                loadedCheerio('.post-content_item h5:contains("Summary")')
                                     .next()
                                     .find('span')
-                                    .map(function (i, el) { return loadedCheerio_1(el).text(); })
+                                    .map(function (i, el) { return loadedCheerio(el).text(); })
                                     .get()
                                     .join('\n\n')
                                     .trim() ||
-                                loadedCheerio_1('.manga-summary p')
-                                    .map(function (i, el) { return loadedCheerio_1(el).text(); })
+                                loadedCheerio('.manga-summary p')
+                                    .map(function (i, el) { return loadedCheerio(el).text(); })
                                     .get()
                                     .join('\n\n')
                                     .trim() ||
-                                loadedCheerio_1('.manga-excerpt p')
-                                    .map(function (i, el) { return loadedCheerio_1(el).text(); })
+                                loadedCheerio('.manga-excerpt p')
+                                    .map(function (i, el) { return loadedCheerio(el).text(); })
                                     .get()
                                     .join('\n\n')
                                     .trim();
-                        chapters_1 = [];
+                        chapters = [];
                         html = '';
-                        _b.label = 2;
-                    case 2:
-                        _b.trys.push([2, 4, , 7]);
+                        if (!((_a = this.options) === null || _a === void 0 ? void 0 : _a.useNewChapterEndpoint)) return [3 /*break*/, 3];
                         return [4 /*yield*/, (0, fetch_1.fetchApi)(this.site + novelPath + 'ajax/chapters/', {
                                 method: 'POST',
                                 referrer: this.site + novelPath,
                             }).then(function (res) { return res.text(); })];
-                    case 3:
+                    case 2:
                         html = _b.sent();
-                        return [3 /*break*/, 7];
-                    case 4:
-                        _a = _b.sent();
-                        novelId = loadedCheerio_1('.rating-post-id').attr('value') ||
-                            loadedCheerio_1('#manga-chapters-holder').attr('data-id') ||
+                        return [3 /*break*/, 5];
+                    case 3:
+                        novelId = loadedCheerio('.rating-post-id').attr('value') ||
+                            loadedCheerio('#manga-chapters-holder').attr('data-id') ||
                             '';
-                        if (!novelId) return [3 /*break*/, 6];
                         formData = new FormData();
                         formData.append('action', 'manga_get_chapters');
                         formData.append('manga', novelId);
@@ -349,22 +392,21 @@ var BelleRepositoryPlugin = /** @class */ (function () {
                                 method: 'POST',
                                 body: formData,
                             }).then(function (res) { return res.text(); })];
-                    case 5:
+                    case 4:
                         html = _b.sent();
-                        _b.label = 6;
-                    case 6: return [3 /*break*/, 7];
-                    case 7:
-                        if (html !== '0' && html) {
-                            loadedCheerio_1 = (0, cheerio_1.load)(html);
+                        _b.label = 5;
+                    case 5:
+                        if (html !== '0') {
+                            loadedCheerio = (0, cheerio_1.load)(html);
                         }
-                        totalChapters_1 = loadedCheerio_1('.wp-manga-chapter').length;
-                        loadedCheerio_1('.wp-manga-chapter').each(function (chapterIndex, element) {
-                            var chapterName = loadedCheerio_1(element).find('a').text().trim();
+                        totalChapters = loadedCheerio('.wp-manga-chapter').length;
+                        loadedCheerio('.wp-manga-chapter').each(function (chapterIndex, element) {
+                            var chapterName = loadedCheerio(element).find('a').text().trim();
                             var locked = element.attribs['class'].includes('premium-block');
                             if (locked) {
                                 chapterName = '🔒 ' + chapterName;
                             }
-                            var releaseDate = loadedCheerio_1(element)
+                            var releaseDate = loadedCheerio(element)
                                 .find('span.chapter-release-date')
                                 .text()
                                 .trim();
@@ -374,52 +416,50 @@ var BelleRepositoryPlugin = /** @class */ (function () {
                             else {
                                 releaseDate = (0, dayjs_1.default)().format('LL');
                             }
-                            var chapterUrl = loadedCheerio_1(element).find('a').attr('href') || '';
-                            if (chapterUrl && chapterUrl != '#') {
-                                chapters_1.push({
+                            var chapterUrl = loadedCheerio(element).find('a').attr('href') || '';
+                            if (chapterUrl && chapterUrl != '#' && !(locked && _this.hideLocked)) {
+                                chapters.push({
                                     name: chapterName,
                                     path: chapterUrl.replace(/https?:\/\/.*?\//, '/'),
                                     releaseTime: releaseDate || null,
-                                    chapterNumber: totalChapters_1 - chapterIndex,
+                                    chapterNumber: totalChapters - chapterIndex,
                                 });
                             }
                         });
-                        novel_1.chapters = chapters_1.reverse();
-                        return [2 /*return*/, novel_1];
-                    case 8:
-                        error_2 = _b.sent();
-                        console.error('BelleRepository: Error in parseNovel:', error_2);
-                        throw error_2;
-                    case 9: return [2 /*return*/];
+                        novel.chapters = chapters.reverse();
+                        return [2 /*return*/, novel];
                 }
             });
         });
     };
-    BelleRepositoryPlugin.prototype.parseChapter = function (chapterPath) {
+    MadaraPlugin.prototype.parseChapter = function (chapterPath) {
         return __awaiter(this, void 0, void 0, function () {
-            var loadedCheerio, chapterText, error_3;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.getCheerio(this.site + chapterPath, false)];
+            var loadedCheerio, chapterText;
+            var _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4 /*yield*/, this.getCheerio(this.site + chapterPath, false)];
                     case 1:
-                        loadedCheerio = _a.sent();
+                        loadedCheerio = _b.sent();
                         chapterText = loadedCheerio('.text-left') ||
                             loadedCheerio('.text-right') ||
                             loadedCheerio('.entry-content') ||
                             loadedCheerio('.c-blog-post > div > div:nth-child(2)');
-                        return [2 /*return*/, chapterText.html() || ''];
-                    case 2:
-                        error_3 = _a.sent();
-                        console.error('BelleRepository: Error in parseChapter:', error_3);
-                        throw error_3;
-                    case 3: return [2 /*return*/];
+                        if ((_a = this.options) === null || _a === void 0 ? void 0 : _a.customJs) {
+                            try {
+                                // CustomJS HERE
+                            }
+                            catch (error) {
+                                console.error('Error executing customJs:', error);
+                                throw error;
+                            }
+                        }
+                        return [2 /*return*/, this.translateDragontea(chapterText).html() || ''];
                 }
             });
         });
     };
-    BelleRepositoryPlugin.prototype.searchNovels = function (searchTerm, pageNo) {
+    MadaraPlugin.prototype.searchNovels = function (searchTerm, pageNo) {
         return __awaiter(this, void 0, void 0, function () {
             var url, loadedCheerio;
             return __generator(this, function (_a) {
@@ -427,18 +467,17 @@ var BelleRepositoryPlugin = /** @class */ (function () {
                     case 0:
                         url = this.site +
                             '/page/' +
-                            (pageNo || 1) +
+                            pageNo +
                             '/?s=' +
                             encodeURIComponent(searchTerm) +
                             '&post_type=wp-manga';
                         return [4 /*yield*/, this.getCheerio(url, true)];
                     case 1:
                         loadedCheerio = _a.sent();
-                        return [2 /*return*/, this.parseNovelsFromPage(loadedCheerio)];
+                        return [2 /*return*/, this.parseNovels(loadedCheerio)];
                 }
             });
         });
     };
-    return BelleRepositoryPlugin;
+    return MadaraPlugin;
 }());
-exports.default = new BelleRepositoryPlugin();
