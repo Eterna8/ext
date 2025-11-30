@@ -1,0 +1,613 @@
+{
+    "success": true,
+    "data": {
+        "posts": [
+            {
+                "title": "From Divorce to Dusk",
+                "thumbnail": "\/public\/images\/2025\/10\/xxlarge-18.webp",
+                "excerpt": "It began with the stamp of a seal. &nbsp; It ended with the stamp of a seal. &nbsp; Their five-year marriage was over, leaving behind nothing but emptiness. &nbsp; It was only after the divorce that Jaekyung began to see Taesuk, and Taesuk began to see Jaekyung.",
+                "content": "<span style=\"font-weight: 400\">It began with the stamp of a seal.<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">It ended with the stamp of a seal.<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">Their five-year marriage was over, leaving behind nothing but emptiness.<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">It was only after the divorce that Jaekyung began to see Taesuk, and Taesuk began to see Jaekyung.<\/span>",
+                "permalink": "https:\/\/readhive.org\/series\/138832\/",
+                "terms": {
+                    "genre": [
+                        {
+                            "term_id": 323,
+                            "name": "BL",
+                            "slug": "bl",
+                            "term_group": 0,
+                            "term_taxonomy_id": 323,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 118,
+                            "filter": "raw"
+                        }
+                    ]
+                },
+                "genres": [
+                    {
+                        "name": "BL",
+                        "url": "\/genre\/bl\/"
+                    }
+                ]
+            },
+            {
+                "title": "Chained",
+                "thumbnail": "\/public\/images\/2025\/10\/xxlarge-17.webp",
+                "excerpt": "\u2018The desire to throw a stone into that lake was a simple impulse.\u2019 &nbsp; Lema, a royal court mage from the capital who came to Kiridara to research sealing magic, finds himself secretly treating the young lord of Kiridara, Ters, who has been deeply injured. Afterwards, Ters shows Lema great favor whenever they meet, but...",
+                "content": "<i><span style=\"font-weight: 400\">\u2018The desire to throw a stone into that lake was a simple impulse.\u2019<\/span><\/i>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">Lema, a royal court mage from the capital who came to Kiridara to research sealing magic, finds himself secretly treating the young lord of Kiridara, Ters, who has been deeply injured. Afterwards, Ters shows Lema great favor whenever they meet, but Lema, wanting not even a toe to get caught in the twisted power struggles of Kiridara's heptadragons over the right of succession, ignores the fact that Ters likes him even after noticing it. However, while teasing and testing Ters as if in jest, he hears a sincere confession and finds himself swayed as if by a whim.<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">Then one day, Lema's situation suddenly changes, putting him in a difficult position to move freely in Kiridara. He decides to use Ters's feelings, offer himself for a night, and demand a deal in return. However, with a composed face that reveals none of his inner thoughts, Ters politely refuses the seduction and sends him back.<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">The next day, Ters helps Lema without demanding anything in return, and then presents him with a choice between two options, requesting a relationship that begins with a kiss. In the Dragon's Lake, which had been calm without a single breeze, what will be the end of the ripples he has caused...?<\/span>\r\n\r\n&nbsp;\r\n\r\nNote: This is a spin-off prequel to the novel <strong>Antidote<\/strong>.",
+                "permalink": "https:\/\/readhive.org\/series\/138369\/",
+                "terms": {
+                    "genre": [
+                        {
+                            "term_id": 323,
+                            "name": "BL",
+                            "slug": "bl",
+                            "term_group": 0,
+                            "term_taxonomy_id": 323,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 118,
+                            "filter": "raw"
+                        }
+                    ]
+                },
+                "genres": [
+                    {
+                        "name": "BL",
+                        "url": "\/genre\/bl\/"
+                    }
+                ]
+            },
+            {
+                "title": "Sea Monster Stew",
+                "thumbnail": "\/public\/images\/2025\/09\/Screenshot-2025-09-22-111904.jpg",
+                "excerpt": "An era of pirates where beasts wearing human masks have seized control of the sea. &nbsp; \u201cStarving and exhausted, the wife barely regained her strength after eating the meat stew her husband made for her. But as soon as she finished talking with him, she threw herself into the sea.\u201d \u201c\u2026\u2026Did she take her own...",
+                "content": "<span style=\"font-weight: 400\">An era of pirates where beasts wearing human masks have seized control of the sea.<\/span>\r\n\r\n&nbsp;\r\n\r\n<b>\u201cStarving and exhausted, the wife barely regained her strength after eating the meat stew her husband made for her. But as soon as she finished talking with him, she threw herself into the sea.\u201d<\/b>\r\n\r\n<b>\r\n<\/b><b>\u201c\u2026\u2026Did she take her own life?\u201d<\/b>\r\n\r\n<b>\r\n<\/b><b>\u201cPerhaps. Now, why do you think she threw herself into the sea?\u201d<\/b>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">Even in this age where barbarism and romance coexist, people are enthralled by riddles.<\/span>\r\n\r\n&nbsp;\r\n\r\n<b>\u201cThe stew the husband fed his wife\u2026 was made from sea monster meat.\u201d<\/b>\r\n\r\n&nbsp;\r\n\r\n<b>\u201c\u2026\u2026.\u201d<\/b>\r\n\r\n<b>\r\n<\/b><b>\u201cShe couldn\u2019t forgive herself for being satisfied after eating such a filthy monster.\u201d<\/b>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">In a world where sea monsters in human form are treated worse than beasts,<\/span>\r\n\r\n<span style=\"font-weight: 400\">\r\n<\/span><span style=\"font-weight: 400\">a pirate who despises sea monsters kidnaps a woman for revenge.<\/span>\r\n\r\n&nbsp;\r\n\r\n<b>\u201cThere was a pirate who had a beloved lover. One day, the lover ate the stew the pirate gave them and left his side. Why do you think the lover left?\u201d<\/b>\r\n\r\n&nbsp;\r\n\r\n<b>\u201cThey must have realized the pirate didn\u2019t truly love them.\u201d<\/b>\r\n\r\n&nbsp;\r\n\r\n<b>\u201cHow could they have known?\u201d<\/b>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">The woman swallowed her answer: <\/span><i><span style=\"font-weight: 400\">If he really loved them, he wouldn\u2019t have fed them one of their own kind.<\/span><\/i>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">The pirate had no idea.<\/span>\r\n\r\n<span style=\"font-weight: 400\">\r\n<\/span><span style=\"font-weight: 400\">He didn\u2019t know that the woman he kidnapped was one of the very sea monsters he so despised.<\/span>",
+                "permalink": "https:\/\/readhive.org\/series\/132967\/",
+                "terms": {
+                    "genre": [
+                        {
+                            "term_id": 19,
+                            "name": "Romance",
+                            "slug": "romance",
+                            "term_group": 0,
+                            "term_taxonomy_id": 19,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 187,
+                            "filter": "raw"
+                        },
+                        {
+                            "term_id": 24,
+                            "name": "Supernatural",
+                            "slug": "supernatural",
+                            "term_group": 0,
+                            "term_taxonomy_id": 24,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 6,
+                            "filter": "raw"
+                        }
+                    ]
+                },
+                "genres": [
+                    {
+                        "name": "Romance",
+                        "url": "\/genre\/romance\/"
+                    },
+                    {
+                        "name": "Supernatural",
+                        "url": "\/genre\/supernatural\/"
+                    }
+                ]
+            },
+            {
+                "title": "Sugar Floss Snare",
+                "thumbnail": "\/public\/images\/2025\/09\/xxlarge-2-1.webp",
+                "excerpt": "Kang Yeoul has been living peacefully despite losing two years of memories due to a car accident. While tirelessly searching for his missing grandmother and scraping by to make ends meet, a mysterious and unfamiliar gangster, Kwon Itae, starts lingering around him. &nbsp; \u201cA plastic bag costs 100 won, but staring at Kang Yeoul is...",
+                "content": "Kang Yeoul has been living peacefully despite losing two years of memories due to a car accident. While tirelessly searching for his missing grandmother and scraping by to make ends meet, a mysterious and unfamiliar gangster, Kwon Itae, starts lingering around him.\r\n\r\n&nbsp;\r\n\r\n<em>\u201cA plastic bag costs 100 won, but staring at Kang Yeoul is free.\u201d<\/em>\r\n\r\n&nbsp;\r\n\r\nDesperate for an ordinary life, Yeoul tries to fend him off in his own way, but as if scripted, misfortune strikes with uncanny precision. Yeoul loses all his jobs and ends up saddled with a massive debt in the millions\u2026\r\n\r\n&nbsp;\r\n\r\n<em>\u201cYeoul-ah, is being with me really that bad?\u201d<\/em>\r\n\r\n&nbsp;\r\n\r\nKwon Itae catches the fleeing Yeoul, pulling him into his arms and spinning him around. Is his heart driven by revenge or love?\r\n\r\n&nbsp;\r\n\r\n<strong>#Omegaverse #RomanticComedy #SpicyTwist #GangsterGong #ConsciencelessGong #VengefulExGong #FeistySoo #AmnesiacSoo #WhoAreYouSweetSoo<\/strong>",
+                "permalink": "https:\/\/readhive.org\/series\/132261\/",
+                "terms": {
+                    "genre": [
+                        {
+                            "term_id": 323,
+                            "name": "BL",
+                            "slug": "bl",
+                            "term_group": 0,
+                            "term_taxonomy_id": 323,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 118,
+                            "filter": "raw"
+                        }
+                    ]
+                },
+                "genres": [
+                    {
+                        "name": "BL",
+                        "url": "\/genre\/bl\/"
+                    }
+                ]
+            },
+            {
+                "title": "To You, Who Will Die Alone in Paradise",
+                "thumbnail": "\/public\/images\/2025\/09\/2ff1cecf-db1a-4ad8-a2de-cdad1d20d44a-1.jpg",
+                "excerpt": "Dandeleon, the illegitimate prince, unloved by all. Unable to disobey the king&#8217;s command, he is forced to serve the noble elf, Kellewen. &nbsp; &#8220;Look at me, Leon.&#8221; &nbsp; &#8220;Ah!&#8221; &nbsp; &#8220;I told you to look at me.&#8221; &nbsp; Having foreseen the future, Dandeleon believes Kellewen will violate him, and so he searches for the &#8220;real&#8221;...",
+                "content": "Dandeleon, the illegitimate prince, unloved by all. Unable to disobey the king's command, he is forced to serve the noble elf, Kellewen.\r\n\r\n&nbsp;\r\n\r\n<em>\"Look at me, Leon.\"<\/em>\r\n\r\n&nbsp;\r\n\r\n<em>\"Ah!\"<\/em>\r\n\r\n&nbsp;\r\n\r\n<em>\"I told you to look at me.\"<\/em>\r\n\r\n&nbsp;\r\n\r\nHaving foreseen the future, Dandeleon believes Kellewen will violate him, and so he searches for the \"real\" Kellewen hidden beneath the hypocrisy.\r\n\r\n&nbsp;\r\n\r\n<em>\"Um, I know this is an incredibly rude thing to ask, but... could you hold me?\"<\/em>\r\n\r\n&nbsp;\r\n\r\n<em>\"Of course. Don't you worry.\"<\/em>\r\n\r\n&nbsp;\r\n\r\nBut Kellewen remains virtuous and is almost excessively kind to Dandeleon.\r\n\r\n&nbsp;\r\n\r\n<em>\"It seems I began this journey just to meet you.\"<\/em>\r\n\r\n&nbsp;\r\n\r\nAs if he has feelings for him.",
+                "permalink": "https:\/\/readhive.org\/series\/131233\/",
+                "terms": {
+                    "genre": [
+                        {
+                            "term_id": 323,
+                            "name": "BL",
+                            "slug": "bl",
+                            "term_group": 0,
+                            "term_taxonomy_id": 323,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 118,
+                            "filter": "raw"
+                        }
+                    ]
+                },
+                "genres": [
+                    {
+                        "name": "BL",
+                        "url": "\/genre\/bl\/"
+                    }
+                ]
+            },
+            {
+                "title": "Grant me Your Grace",
+                "thumbnail": "\/public\/images\/2025\/08\/GMG.jpeg",
+                "excerpt": "The Day of the Oracle. A beautiful gift from the gods, Hissin, has appeared in the desert nation of Bahran. &nbsp; A young princess, Dahlia of Bahran, encounters Hissin at the temple one day&#8230; \u201cYou&#8217;ve learned so much in such a short time.\u201d \u201c I know everything about Bahran.\u201d For a man who couldn&#8217;t remember...",
+                "content": "<span style=\"font-weight: 400\">The Day of the Oracle. A beautiful gift from the gods, Hissin, has appeared in the desert nation of Bahran.<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">A young princess, Dahlia of Bahran, encounters Hissin at the temple one day...<\/span>\r\n\r\n<b>\u201cYou've learned so much in such a short time.\u201d<\/b>\r\n\r\n<b>\u201c I know everything about Bahran.\u201d<\/b>\r\n\r\n<span style=\"font-weight: 400\">For a man who couldn't remember anything but his name, he seemed to know a suspicious degree about Dahlia,<\/span>\r\n\r\n&nbsp;\r\n\r\n<b>\u201cIt's only a simple step, Your Highness.\u201d<\/b>\r\n\r\n<b>\u201cAh...\u201d<\/b>\r\n\r\n<b>\u201cFor this night, it will be just the two of us.\u201d<\/b>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">He kept leading Dahlia into forbidden territory...<\/span>\r\n\r\n&nbsp;\r\n\r\n<b>\u201cOnly by falling into the filthiest and ugliest of places can I find favor with the Princess.\u201d<\/b>\r\n\r\n<b>\u201cAre you kidding me?\u201d<\/b>\r\n\r\n<b>\u201cYou don't like the filthy and hideous.\u201d<\/b>\r\n\r\n<span style=\"font-weight: 400\">But to Dahlia, who was tormented by her divine powers, the touch of Hissin's hand was an irresistible poison that could soothe the pain.<\/span>\r\n\r\n<b>\u201cWhat can I do.\u201d<\/b>\r\n\r\n<span style=\"font-weight: 400\">Could he really be the devil who would lead her to her doom?<\/span>\r\n\r\n&nbsp;\r\n\r\n<b>\u201cThe kind of man who wants to hold you.\u201d<\/b>\r\n\r\n<span style=\"font-weight: 400\">Or perhaps he's an angel who might save her from this hellish world?<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"color: #ff0000\"><b>MALE LEAD \u2014 Hissin<\/b><\/span>\r\n\r\n<span style=\"font-weight: 400\">A red-eyed man who appears out of nowhere on Dahlia's coming-of-age ceremony as a gift from the oracle. He doesn't remember anything but his name.<\/span>\r\n\r\n<span style=\"color: #ff00ff\"><b>FEMALE LEAD\u2014 Dahlia of Bahran<\/b><\/span>\r\n\r\n<span style=\"font-weight: 400\">As the only princess of Bahran, a great empire in the desert, her blood has the power to heal any disease or wound. However, in Bahran, where only men are eligible to inherit the emperor's chalice, Dahlia's divine powers are considered a mistake. Fearing that this dangerous secret may be found out, she lives in seclusion deep within the palace, forbidden from contact with any outsiders.<\/span>",
+                "permalink": "https:\/\/readhive.org\/series\/125162\/",
+                "terms": {
+                    "genre": [
+                        {
+                            "term_id": 7,
+                            "name": "Drama",
+                            "slug": "drama",
+                            "term_group": 0,
+                            "term_taxonomy_id": 7,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 97,
+                            "filter": "raw"
+                        },
+                        {
+                            "term_id": 9,
+                            "name": "Fantasy",
+                            "slug": "fantasy",
+                            "term_group": 0,
+                            "term_taxonomy_id": 9,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 199,
+                            "filter": "raw"
+                        },
+                        {
+                            "term_id": 11,
+                            "name": "Historical",
+                            "slug": "historical",
+                            "term_group": 0,
+                            "term_taxonomy_id": 11,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 21,
+                            "filter": "raw"
+                        },
+                        {
+                            "term_id": 14,
+                            "name": "Mature",
+                            "slug": "mature",
+                            "term_group": 0,
+                            "term_taxonomy_id": 14,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 16,
+                            "filter": "raw"
+                        },
+                        {
+                            "term_id": 19,
+                            "name": "Romance",
+                            "slug": "romance",
+                            "term_group": 0,
+                            "term_taxonomy_id": 19,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 187,
+                            "filter": "raw"
+                        },
+                        {
+                            "term_id": 72,
+                            "name": "Shoujo",
+                            "slug": "shoujo",
+                            "term_group": 0,
+                            "term_taxonomy_id": 72,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 33,
+                            "filter": "raw"
+                        }
+                    ]
+                },
+                "genres": [
+                    {
+                        "name": "Drama",
+                        "url": "\/genre\/drama\/"
+                    },
+                    {
+                        "name": "Fantasy",
+                        "url": "\/genre\/fantasy\/"
+                    },
+                    {
+                        "name": "Historical",
+                        "url": "\/genre\/historical\/"
+                    }
+                ]
+            },
+            {
+                "title": "The Only Woman in a Zombie Apocalypse",
+                "thumbnail": "\/public\/images\/2025\/07\/ZOMBIE.jpg",
+                "excerpt": "\u203b Please note that this story contains scenes that may be divisive\u2014reader discretion is advised. &nbsp; I\u2019ve been reincarnated into a zombie apocalypse story. As the only woman in a group full of men\u2014with a killer body and a gorgeous face! \ud83e\udee7 &#8220;Noona, you\u2019re so pretty.&#8221; &nbsp; Ian rose from his seat, quietly gazing at...",
+                "content": "<span style=\"color: #ff0000\"><b><i>\u203b Please note that this story contains scenes that may be divisive\u2014reader discretion is advised.<\/i><\/b><\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">I\u2019ve been reincarnated into a zombie apocalypse story. As the only woman in a group full of men\u2014with a killer body and a gorgeous face!<\/span>\r\n<h2 style=\"text-align: center\"><span style=\"font-weight: 400\">\ud83e\udee7<\/span><\/h2>\r\n<b>\"Noona, you\u2019re so pretty.\"<\/b>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">Ian rose from his seat, quietly gazing at Dayoung lying on the sunbed. Her beauty was the kind you could never get tired of looking at. He climbed on top of her, seeking her lips.<\/span>\r\n\r\n<span style=\"font-weight: 400\">\r\n<\/span><span style=\"font-weight: 400\">Prying open her slightly parted mouth, his tongue explored every corner. Ian traced his fingers along the scar on Dayoung\u2019s waist, following its path downward.<\/span>\r\n\r\n<span style=\"font-weight: 400\">\r\n<\/span><span style=\"font-weight: 400\">A strange sensation made her toes curl.<\/span>\r\n\r\n&nbsp;\r\n\r\n<b>\"Hahh\u2026 This feels weird\u2026 Wait\u2014\"<\/b><b>\r\n<\/b><b>\"It\u2019s not weird. It feels good, right?\"<\/b>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">Dayoung couldn\u2019t tell if this was a dream or reality.<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">A scene she had only imagined while reading zombie stories\u2014<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">Now, it was happening to her in real life. The pleasure was intense, but the thrill in her mind and heart was even greater.<\/span>\r\n\r\n<span style=\"font-weight: 400\">\r\n<\/span><span style=\"font-weight: 400\">A deep moan escaped her at Ian\u2019s touch, her body burning up as if scorched by fire.<\/span>\r\n\r\n&nbsp;\r\n\r\n<b>\"Haa\u2026 Ian\u2026\"<\/b>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">The growling of zombies had long since faded from their awareness.<\/span>\r\n\r\n&nbsp;\r\n<h2 style=\"text-align: center\"><span style=\"font-weight: 400\">\ud83e\udee7<\/span><\/h2>\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">The Unintentional Seductress, Dayoung!<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">Without even realizing it, she captivates the survivors in this zombie-infested world!\u00a0<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">Thrust into unexpected sexual fantasies, she adapts to life in a world overrun by the undead. But as fragments of her body\u2019s original memories\u2014and some she never expected\u2014begin surfacing\u2026<\/span>\r\n\r\n&nbsp;\r\n\r\n<i><span style=\"font-weight: 400\">Her dangerous survival story truly begins!<\/span><\/i>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">Catch men, kill zombies, and outwit enemies\u2014Dayoung\u2019s high-stakes battle for survival in this deadly apocalypse is just getting started!<\/span>",
+                "permalink": "https:\/\/readhive.org\/series\/123039\/",
+                "terms": {
+                    "genre": [
+                        {
+                            "term_id": 3,
+                            "name": "Adult",
+                            "slug": "adult",
+                            "term_group": 0,
+                            "term_taxonomy_id": 3,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 21,
+                            "filter": "raw"
+                        },
+                        {
+                            "term_id": 6,
+                            "name": "Comedy",
+                            "slug": "comedy",
+                            "term_group": 0,
+                            "term_taxonomy_id": 6,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 42,
+                            "filter": "raw"
+                        },
+                        {
+                            "term_id": 8,
+                            "name": "Ecchi",
+                            "slug": "ecchi",
+                            "term_group": 0,
+                            "term_taxonomy_id": 8,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 1,
+                            "filter": "raw"
+                        },
+                        {
+                            "term_id": 9,
+                            "name": "Fantasy",
+                            "slug": "fantasy",
+                            "term_group": 0,
+                            "term_taxonomy_id": 9,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 199,
+                            "filter": "raw"
+                        },
+                        {
+                            "term_id": 10,
+                            "name": "Harem",
+                            "slug": "harem",
+                            "term_group": 0,
+                            "term_taxonomy_id": 10,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 6,
+                            "filter": "raw"
+                        },
+                        {
+                            "term_id": 18,
+                            "name": "Reincarnation",
+                            "slug": "reincarnation",
+                            "term_group": 0,
+                            "term_taxonomy_id": 18,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 33,
+                            "filter": "raw"
+                        },
+                        {
+                            "term_id": 19,
+                            "name": "Romance",
+                            "slug": "romance",
+                            "term_group": 0,
+                            "term_taxonomy_id": 19,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 187,
+                            "filter": "raw"
+                        },
+                        {
+                            "term_id": 72,
+                            "name": "Shoujo",
+                            "slug": "shoujo",
+                            "term_group": 0,
+                            "term_taxonomy_id": 72,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 33,
+                            "filter": "raw"
+                        }
+                    ]
+                },
+                "genres": [
+                    {
+                        "name": "Adult",
+                        "url": "\/genre\/adult\/"
+                    },
+                    {
+                        "name": "Comedy",
+                        "url": "\/genre\/comedy\/"
+                    },
+                    {
+                        "name": "Ecchi",
+                        "url": "\/genre\/ecchi\/"
+                    }
+                ]
+            },
+            {
+                "title": "World",
+                "thumbnail": "\/public\/images\/2025\/07\/xxlarge-4.webp",
+                "excerpt": "After getting into a university in Seoul, Hyunwoo is looking for a place to live and, with some difficulty, finds a house that feels just like the one he&#8217;s always dreamed of. Other students from his school live there, and Hyunwoo naturally becomes friends with them. &nbsp; The upperclassmen adore Hyunwoo and are generally kind,...",
+                "content": "After getting into a university in Seoul, Hyunwoo is looking for a place to live and, with some difficulty, finds a house that feels just like the one he's always dreamed of. Other students from his school live there, and Hyunwoo naturally becomes friends with them.\r\n\r\n&nbsp;\r\n\r\nThe upperclassmen adore Hyunwoo and are generally kind, but his classmate, Hyungjo, ignores him at every turn. Yet, despite pretending not to care, Hyungjo helps him in moments of crisis, and Hyunwoo gradually begins to open his heart to him.\r\n\r\n&nbsp;\r\n\r\nThen, late one night, assailants attack the house. Hyunwoo barely escapes with Hyungjo's help and reports it to the police, but the house he remembers is nowhere to be found.\r\n\r\n&nbsp;\r\n\r\nHyunwoo refuses to believe that the Hyungjo he loves could be an illusion. While searching desperately for a clue, he finds Hyungjo in an old school graduation album.\r\n\r\n&nbsp;\r\n\r\n<em>\"...Hyungjo.\"<\/em>\r\n\r\n&nbsp;\r\n\r\n<em>\"I'm Kim Hanse. I'm the son of the man you say you love. Understand?\"<\/em>",
+                "permalink": "https:\/\/readhive.org\/series\/120127\/",
+                "terms": {
+                    "genre": [
+                        {
+                            "term_id": 323,
+                            "name": "BL",
+                            "slug": "bl",
+                            "term_group": 0,
+                            "term_taxonomy_id": 323,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 118,
+                            "filter": "raw"
+                        }
+                    ]
+                },
+                "genres": [
+                    {
+                        "name": "BL",
+                        "url": "\/genre\/bl\/"
+                    }
+                ]
+            },
+            {
+                "title": "Show Your Face, Prince!",
+                "thumbnail": "\/public\/images\/2025\/06\/xxlarge.webp",
+                "excerpt": "The only daughter of the wealthy Duke of Lenever. She was far from knowing what she wanted to do or achieve in life. Until three years ago, when she had a dream of her past life where she was a cosmetic researcher in Korea. \u201cCosmetics business\u2026 Yes, it&#8217;s cosmetics business!\u201d It was then that the...",
+                "content": "The only daughter of the wealthy Duke of Lenever.\r\n\r\nShe was far from knowing what she wanted to do or achieve in life.\r\n\r\nUntil three years ago, when she had a dream of her past life where she was a cosmetic researcher in Korea.\r\n\r\n\u201cCosmetics business\u2026 Yes, it's cosmetics business!\u201d\r\n\r\nIt was then that the cosmetics business, which started as a dream overnight, became a huge success, and eventually became the most famous and enthusiastic store in the Trillante Empire.\r\n\r\n\u201cPrincess Letier of the Lenever family should enter the palace in the near future and work hard to treat the sun of the Trillante Empire.\u201d\r\n\r\nIf it's the sun Empire, the prince?\r\n\r\nThat person who lives with a terrible skin disease all over his face, and whose personality is as dirty as the world...?\r\n\r\n\u201cPrincess Letier, will you accept the\u00a0 imperial order?\u201d\r\n\r\nNo, I don't want to?!",
+                "permalink": "https:\/\/readhive.org\/series\/115413\/",
+                "terms": {
+                    "genre": [
+                        {
+                            "term_id": 9,
+                            "name": "Fantasy",
+                            "slug": "fantasy",
+                            "term_group": 0,
+                            "term_taxonomy_id": 9,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 199,
+                            "filter": "raw"
+                        },
+                        {
+                            "term_id": 19,
+                            "name": "Romance",
+                            "slug": "romance",
+                            "term_group": 0,
+                            "term_taxonomy_id": 19,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 187,
+                            "filter": "raw"
+                        }
+                    ]
+                },
+                "genres": [
+                    {
+                        "name": "Fantasy",
+                        "url": "\/genre\/fantasy\/"
+                    },
+                    {
+                        "name": "Romance",
+                        "url": "\/genre\/romance\/"
+                    }
+                ]
+            },
+            {
+                "title": "I Became the Villain\u2019s Childhood Friend",
+                "thumbnail": "\/public\/images\/2022\/12\/hot-childhood-friend.jpeg",
+                "excerpt": "I possessed the villain\u2019s childhood friend. The problem is that I&#8217;m destined to die at the hands of my childhood friend, Reynold, the villain, on the day of the Academy graduation. Wanting to escape from fate, I worked hard to sever ties with him. &nbsp; However, this world isn\u2019t as easy as I think. &nbsp;...",
+                "content": "<span style=\"font-weight: 400\">I possessed the villain\u2019s childhood friend.<\/span>\r\n\r\n<span style=\"font-weight: 400\">The problem is that I'm destined to die at the hands of my childhood friend, Reynold, the villain, on the day of the Academy graduation.<\/span>\r\n\r\n<span style=\"font-weight: 400\">Wanting to escape from fate, I worked hard to sever ties with him.<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">However, this world isn\u2019t as easy as I think.<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">***<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">\u201cAre you two going to get married later?\u201d<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">In the words of a madam who asked us, as if we were cute<\/span>\r\n\r\n<span style=\"font-weight: 400\">Not enough to slam a fork on the table, Reynold stormed out of his seat.<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">I followed him out of spirit, and the words that came back\u2026<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">\u201cWho would want to marry you?\u201d<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">I mean, you know what's good?<\/span>\r\n\r\n<span style=\"font-weight: 400\">I'd rather marry a weed rolling by the side of the road than marry that guy.<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">***<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">I struggled to change my fate.<\/span>\r\n\r\n<span style=\"font-weight: 400\">In the end, I even entered the Academy according to the original story.<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">\"You, you're not dating Reynold, are you?\"<\/span>\r\n\r\n<span style=\"font-weight: 400\">\u201cI heard that you harass the girls who approach Reynold\u2026\u201d<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">I tried to avoid Reynold as much as possible, but for some reason, such nonsense spread.<\/span>\r\n\r\n<span style=\"font-weight: 400\">I finally raised my voice.<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">\u201cI said no, I said I\u2019m not! I said I\u2019m just friends with him!\u201d<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400\">The noisy classroom quickly became quiet.<\/span>\r\n\r\n<span style=\"font-weight: 400\">They should have figured it out by now.<\/span>\r\n\r\n<span style=\"font-weight: 400\">When I turned around with a satisfied smile, Reynold, who I didn\u2019t know since when he came, was staring at me.<\/span>\r\n\r\n<span style=\"font-weight: 400\">With a sharp smile.<\/span>",
+                "permalink": "https:\/\/readhive.org\/series\/114845\/",
+                "terms": {
+                    "genre": [
+                        {
+                            "term_id": 9,
+                            "name": "Fantasy",
+                            "slug": "fantasy",
+                            "term_group": 0,
+                            "term_taxonomy_id": 9,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 199,
+                            "filter": "raw"
+                        },
+                        {
+                            "term_id": 19,
+                            "name": "Romance",
+                            "slug": "romance",
+                            "term_group": 0,
+                            "term_taxonomy_id": 19,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 187,
+                            "filter": "raw"
+                        },
+                        {
+                            "term_id": 20,
+                            "name": "School Life",
+                            "slug": "school-life",
+                            "term_group": 0,
+                            "term_taxonomy_id": 20,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 7,
+                            "filter": "raw"
+                        }
+                    ]
+                },
+                "genres": [
+                    {
+                        "name": "Fantasy",
+                        "url": "\/genre\/fantasy\/"
+                    },
+                    {
+                        "name": "Romance",
+                        "url": "\/genre\/romance\/"
+                    },
+                    {
+                        "name": "School Life",
+                        "url": "\/genre\/school-life\/"
+                    }
+                ]
+            },
+            {
+                "title": "Boy Monster",
+                "thumbnail": "\/public\/images\/2025\/05\/xxlarge-3.webp",
+                "excerpt": "In late 19th-century Gyeongseong, a mansion belonging to the Sashimcheon family housed superhumans endowed with divine powers and those who controlled their abilities. &nbsp; Jae Eunho, born as the Yeonri of the Death Hwelju, the most supreme power in Korea, lives dreaming of revenge under the violence of the family head until he meets a...",
+                "content": "In late 19th-century Gyeongseong, a mansion belonging to the Sashimcheon family housed superhumans endowed with divine powers and those who controlled their abilities.\r\n\r\n&nbsp;\r\n\r\nJae Eunho, born as the Yeonri of the Death Hwelju, the most supreme power in Korea, lives dreaming of revenge under the violence of the family head until he meets a boy.\r\n\r\n&nbsp;\r\n\r\nDespite knowing their relationship is impossible, they are irresistibly drawn to each other, and in 1941, placed in a tragic fate, they end up killing one another.\r\n\r\n&nbsp;\r\n\r\nThe boy, driven by love, stole the power of the Death Hwelju and became a monster.\r\n\r\n&nbsp;\r\n\r\nAnd Jae Eunho, who killed that boy, is cursed with eternal reincarnation.\r\n\r\n&nbsp;\r\n\r\nNow in Seoul, South Korea, living as an NIS agent, Jae Eunho has gone through seven reincarnations without the monster reappearing.\r\n\r\n&nbsp;\r\n\r\nBut one day, strange earthquakes and murders engulf Seoul. The monster he killed a century ago is searching for Jae Eunho.\r\n\r\n&nbsp;\r\n\r\n<em>\u201cThat monster is calling for you\u2026 moving the entire earth.\u201d<\/em>\r\n\r\n&nbsp;\r\n\r\nAmid horrific events, a mysterious suspect named Si Taeheon emerges\u2014what is his true identity?\r\n\r\n&nbsp;\r\n\r\nIs the boy monster, Jae Eunho\u2019s only love across a century, truly alive?",
+                "permalink": "https:\/\/readhive.org\/series\/112164\/",
+                "terms": {
+                    "genre": [
+                        {
+                            "term_id": 323,
+                            "name": "BL",
+                            "slug": "bl",
+                            "term_group": 0,
+                            "term_taxonomy_id": 323,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 118,
+                            "filter": "raw"
+                        }
+                    ]
+                },
+                "genres": [
+                    {
+                        "name": "BL",
+                        "url": "\/genre\/bl\/"
+                    }
+                ]
+            },
+            {
+                "title": "How Can a Homebody Defeat The Demon King?",
+                "thumbnail": "\/public\/images\/2025\/05\/resource.jpeg",
+                "excerpt": "Being a transmigrator is too good, though? I opened my eyes in bed, and realized I had become a transmigrator. My only goal in life had been to live quietly as a homebody, enjoying an ordinary life. But I had fallen into a world filled with magic, demons, and destruction! &nbsp; Fortunately, I ended up...",
+                "content": "Being a transmigrator is too good, though?\r\n\r\nI opened my eyes in bed, and realized I had become a transmigrator.\r\n\r\nMy only goal in life had been to live quietly as a homebody, enjoying an ordinary life.\r\n\r\nBut I had fallen into a world filled with magic, demons, and destruction!\r\n\r\n&nbsp;\r\n\r\nFortunately, I ended up as a minor side character barely mentioned in the original story.\r\n\r\n&nbsp;\r\n\r\n\u2018Then I\u2019ll just lie down again.\u2019\r\n\r\n&nbsp;\r\n\r\nSelene returned to the cozy, peaceful bed.\r\n\r\nEven by simply staying still, food, cleaning, and laundry service were provided\u2026\r\n\r\n&nbsp;\r\n\r\nBeing a transmigrator is too good, isn\u2019t it?\r\n\r\nThis is paradise for homebodies!\r\n\r\n&nbsp;\r\n\r\n***\r\n\r\n&nbsp;\r\n\r\nThe day Selene became a transmigrator,\r\n\r\nin the Imperial Palace\u2019s conference room, the main figures from the original story gathered.\r\n\r\n&nbsp;\r\n\r\n\"The protagonist from the oracle has arrived.\r\n\r\nTo seal the Demon King, we absolutely need this person.\"\r\n\r\n&nbsp;\r\n\r\nAfter Crown Prince Noelle\u2019s solemn declaration, all eyes turned to Grand Duke Sirinu.\r\n\r\n&nbsp;\r\n\r\n\u201cDemon King or whatever, I\u2019ll kill it.\r\n\r\nYou all just make sure to take care of that precious person, and don\u2019t let her run away.\u201d\r\n\r\n&nbsp;\r\n\r\nSirinu walked out of the conference room after saying it coldly.\r\n\r\nEveryone in the room had the same thought.\r\n\r\n&nbsp;\r\n\r\n\u2018I must find her before anyone else does!\u2019\r\n\r\n&nbsp;\r\n\r\nThus begins a fierce contest to win over the homebody Selene\u2019s favor!",
+                "permalink": "https:\/\/readhive.org\/series\/111686\/",
+                "terms": {
+                    "genre": [
+                        {
+                            "term_id": 6,
+                            "name": "Comedy",
+                            "slug": "comedy",
+                            "term_group": 0,
+                            "term_taxonomy_id": 6,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 42,
+                            "filter": "raw"
+                        },
+                        {
+                            "term_id": 9,
+                            "name": "Fantasy",
+                            "slug": "fantasy",
+                            "term_group": 0,
+                            "term_taxonomy_id": 9,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 199,
+                            "filter": "raw"
+                        },
+                        {
+                            "term_id": 19,
+                            "name": "Romance",
+                            "slug": "romance",
+                            "term_group": 0,
+                            "term_taxonomy_id": 19,
+                            "taxonomy": "genre",
+                            "description": "",
+                            "parent": 0,
+                            "count": 187,
+                            "filter": "raw"
+                        }
+                    ]
+                },
+                "genres": [
+                    {
+                        "name": "Comedy",
+                        "url": "\/genre\/comedy\/"
+                    },
+                    {
+                        "name": "Fantasy",
+                        "url": "\/genre\/fantasy\/"
+                    },
+                    {
+                        "name": "Romance",
+                        "url": "\/genre\/romance\/"
+                    }
+                ]
+            }
+        ],
+        "page": 1,
+        "pages": 4
+    }
+}

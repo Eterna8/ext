@@ -72,40 +72,75 @@ class ReadHivePlugin implements Plugin.PluginBase {
     searchTerm: string,
     pageNo: number,
   ): Promise<Plugin.NovelItem[]> {
-    // Build the FormData payload
-    const form = new FormData();
-    form.append('search', searchTerm);
-    form.append('orderBy', 'recent');
-    form.append('post', '60916bbfb9');
-    form.append('action', 'fetch_browse');
+    try {
+      console.log('=== SEARCH DEBUG START ===');
+      console.log('Search term:', searchTerm);
+      console.log('Page:', pageNo);
 
-    // Add page parameter if not the first page
-    if (pageNo > 1) {
-      form.append('page', pageNo.toString());
-    }
+      // Build the FormData payload
+      const form = new FormData();
+      form.append('search', searchTerm);
+      form.append('orderBy', 'recent');
+      form.append('post', '60916bbfb9');
+      form.append('action', 'fetch_browse');
 
-    const result = await fetchApi(`${this.site}/ajax`, {
-      method: 'POST',
-      body: form,
-    });
+      if (pageNo > 1) {
+        form.append('page', pageNo.toString());
+      }
 
-    const json = await result.json();
+      console.log('Making request to:', `${this.site}/ajax`);
 
-    // Check if the response is successful
-    if (!json.success || !json.data || !json.data.posts) {
+      const result = await fetchApi(`${this.site}/ajax`, {
+        method: 'POST',
+        body: form,
+      });
+
+      console.log('Response status:', result.status);
+
+      const text = await result.text();
+      console.log('Response text (first 500 chars):', text.substring(0, 500));
+
+      const json = JSON.parse(text);
+      console.log('JSON parsed successfully');
+      console.log('json.success:', json.success);
+      console.log('json.data exists:', !!json.data);
+
+      if (json.data) {
+        console.log('json.data.posts exists:', !!json.data.posts);
+        console.log('json.data.posts length:', json.data.posts?.length);
+      }
+
+      // Check if the response is successful
+      if (!json.success || !json.data || !json.data.posts) {
+        console.log('Response check failed, returning empty array');
+        return [];
+      }
+
+      // Map the posts array to NovelItem objects
+      const novels: Plugin.NovelItem[] = json.data.posts.map((post: any) => {
+        const novel = {
+          name: post.title,
+          path: post.permalink.replace(this.site, ''),
+          cover: post.thumbnail.startsWith('http')
+            ? post.thumbnail
+            : this.resolveUrl(post.thumbnail),
+        };
+        console.log('Mapped novel:', novel.name);
+        return novel;
+      });
+
+      console.log('=== SEARCH DEBUG END ===');
+      console.log('Returning', novels.length, 'novels');
+      return novels;
+    } catch (error) {
+      console.error('=== SEARCH ERROR ===');
+      console.error('Error:', error);
+      console.error(
+        'Error message:',
+        error instanceof Error ? error.message : 'Unknown error',
+      );
       return [];
     }
-
-    // Map the posts array to NovelItem objects
-    const novels: Plugin.NovelItem[] = json.data.posts.map((post: any) => ({
-      name: post.title,
-      path: post.permalink.replace(this.site, ''),
-      cover: post.thumbnail.startsWith('http')
-        ? post.thumbnail
-        : this.resolveUrl(post.thumbnail),
-    }));
-
-    return novels;
   }
 
   async parseNovel(novelPath: string): Promise<Plugin.SourceNovel> {

@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node scripts/build-plugin-manifest:*)",
+      "Bash(curl:*)",
+      "Bash(cp:*)",
+      "Bash(rm:*)",
+      "Bash(npm run build:compile:*)",
+      "Bash(npm run build:manifest:*)",
+      "Bash(mkdir:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

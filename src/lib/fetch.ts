@@ -16,6 +16,8 @@ type FetchInit = {
 
 const makeInit = async (init?: FetchInit) => {
   const defaultHeaders: Record<string, string> = {
+    'User-Agent':
+      'Mozilla/5.0 (Windows NT, Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.114 Safari/537.36',
     'Connection': 'keep-alive',
     'Accept': '*/*',
     'Accept-Language': '*',
