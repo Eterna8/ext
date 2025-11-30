@@ -5,24 +5,13 @@ fetch.ts:55 https://readhive.org {headers: {…}}
 ReadHive.ts:76 === SEARCH DEBUG START ===
 ReadHive.ts:77 Search term: seed
 ReadHive.ts:78 Page: 1
-ReadHive.ts:86 Making GET request to: https://readhive.org/browse-series/?search=seed&orderBy=recent
-fetch.ts:55 https://readhive.org/browse-series/?search=seed&orderBy=recent {headers: {…}}
-ReadHive.ts:90 Response status: 200
-ReadHive.ts:93 Response text (first 1000 chars): <!doctype html>
-<html lang="en-US" class="scroll-smooth scroll-pt-12">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Browse Series &#8211; Readhive</title>
-<meta name='robots' content='max-image-preview:large' />
-<link rel='dns-prefetch' href='//readhive.org' />
-<link rel="stylesheet" href="/public/css/app.c45fbd.css"><link rel="canonical" href="https://readhive.org/browse-series/" />
-<meta property="og:title" name="og:title" content="Browse Series" />
-<meta property="og:type" name="og:type" content="article" />
-<meta property="og:image" name="og:image" content="/public/images/2022/07/FO721D5FA0CC7-02-scaled-e1658075230203.jpg" />
-<meta property="og:url" name="og:url" content="https://readhive.org/browse-series/" />
-<meta property="og:locale" name="og:locale" content="en_US" />
-<meta property="og:site_name" name="og:site_name" content="Readhive" />
-<meta property="twitter:card" name="twitter:card" content="summar
-ReadHive.ts:123 === SEARCH DEBUG END ===
-ReadHive.ts:124 Returning 0 novels
+ReadHive.ts:89 Making AJAX request to: https://readhive.org/ajax
+ReadHive.ts:90 Request payload: query = seed
+fetch.ts:55 https://readhive.org/ajax {method: 'POST', body: FormData, headers: {…}}
+ReadHive.ts:97 Response status: 200
+ReadHive.ts:100 Response text (first 500 chars): {"success":false,"data":{"message":"Unspecified request."}}
+ReadHive.ts:105 JSON parsed successfully
+ReadHive.ts:177 No posts found in JSON response
+ReadHive.ts:178 Response structure: (2) ['success', 'data']
+ReadHive.ts:181 === SEARCH DEBUG END ===
+ReadHive.ts:182 Returning 0 novels

@@ -79,7 +79,8 @@ class ReadHivePlugin implements Plugin.PluginBase {
 
       // Try correct AJAX request format found in JavaScript
       const form = new FormData();
-      form.append('query', searchTerm);
+      form.append('action', 'fetch_browse');
+      form.append('search', searchTerm);
 
       // Add pagination if needed
       if (pageNo > 1) {
@@ -87,7 +88,10 @@ class ReadHivePlugin implements Plugin.PluginBase {
       }
 
       console.log('Making AJAX request to:', `${this.site}/ajax`);
-      console.log('Request payload: query =', searchTerm);
+      console.log(
+        'Request payload: action = fetch_browse, search =',
+        searchTerm,
+      );
 
       const result = await fetchApi(`${this.site}/ajax`, {
         method: 'POST',
