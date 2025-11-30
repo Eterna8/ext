@@ -90,12 +90,21 @@ class ReadHivePlugin implements Plugin.PluginBase {
 
       const allNovels: Plugin.NovelItem[] = [];
 
-      // Look for novel entries on browse page
-      $('a[href*="/series/"]').each((i, el) => {
+      // Look for novel entries on browse page with multiple selectors
+      console.log('Searching for any links in HTML...');
+
+      $('a').each((i, el) => {
         const path = $(el).attr('href');
         if (path && !path.includes('page')) {
           const name = $(el).find('img').attr('alt') || $(el).text().trim();
           let cover = $(el).find('img').attr('src');
+
+          // Debug: log first few links found
+          if (i < 5) {
+            console.log(`Found link ${i}:`, path);
+            console.log(`Name:`, name);
+            console.log(`Cover:`, cover);
+          }
 
           if (name && cover) {
             const novel: Plugin.NovelItem = {
