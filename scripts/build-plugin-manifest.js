@@ -128,6 +128,7 @@ for (let language in languages) {
       return;
     }
 
+    // Official LNReader format with version info
     const info = {
       id,
       name: normalisedName,
@@ -135,7 +136,7 @@ for (let language in languages) {
       lang: languages[language],
       version,
       url: `${PLUGIN_LINK}/${language.toLowerCase()}/${plugin}`,
-      iconUrl: `${STATIC_LINK}/${icon || 'siteNotAvailable.png'}`,
+      iconUrl: `${STATIC_LINK}/${icon || 'coverNotAvailable.webp'}`,
       customJS: customJS ? `${STATIC_LINK}/${customJS}` : undefined,
       customCSS: customCSS ? `${STATIC_LINK}/${customCSS}` : undefined,
     };
