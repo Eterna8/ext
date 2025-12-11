@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git merge --no-ff origin/master -m \"Merge remote master\")",
+      "Bash(git reset --hard HEAD~0)",
+      "Bash(git rm --cached .claude/settings.local.json)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(git rev-parse --abbrev-ref HEAD)",
+      "Bash(git rebase origin/master)",
+      "Bash(cat .gitignore)"
+    ]
+  }
+}
