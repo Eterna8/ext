@@ -18,7 +18,9 @@
       "Bash(npm run build:full)",
       "Bash(curl -X POST \"https://tangerinearchive.com/series/in-the-doghouse/ajax/chapters/\" -H \"Referer: https://tangerinearchive.com/series/in-the-doghouse/\" -s)",
       "Bash(curl:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ]
   }
 }
