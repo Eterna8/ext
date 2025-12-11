@@ -21,9 +21,11 @@ class ReadHivePlugin implements Plugin.PluginBase {
     pageNo: number,
     options: Plugin.PopularNovelsOptions<typeof this.filters>,
   ): Promise<Plugin.NovelItem[]> {
-    if (pageNo > 1) return [];
+    // Maximum page number is 34 based on site analysis
+    if (pageNo > 34) return [];
 
-    const url = this.site;
+    // For page 1, use the root URL. For pages 2-34, use /page/{number}/
+    const url = pageNo === 1 ? this.site : `${this.site}/page/${pageNo}/`;
     const result = await fetchApi(url);
     const body = await result.text();
     const $ = loadCheerio(body);
@@ -32,6 +34,7 @@ class ReadHivePlugin implements Plugin.PluginBase {
     const processedPaths = new Set<string>();
 
     if (options.showLatestNovels) {
+      // Extract from Latest Updates section
       $('h2:contains("Latest Updates")')
         .next('.flex-wrap')
         .find('.px-2.mb-4')
@@ -48,21 +51,59 @@ class ReadHivePlugin implements Plugin.PluginBase {
           }
         });
     } else {
-      $('h2:contains("Popular")')
-        .nextAll('.swiper')
-        .find('.swiper-slide')
-        .each((i, el) => {
-          const path = $(el).find('a').attr('href');
-          if (path && !processedPaths.has(path)) {
-            const name = $(el).find('h6').text().trim();
-            let cover = $(el).find('img').attr('src');
+      // For page 1, extract from Popular sections (swiper slides)
+      if (pageNo === 1) {
+        $('h2:contains("Popular")')
+          .nextAll('.swiper')
+          .find('.swiper-slide')
+          .each((i, el) => {
+            const path = $(el).find('a').attr('href');
+            if (path && !processedPaths.has(path)) {
+              const name = $(el).find('h6').text().trim();
+              let cover = $(el).find('img').attr('src');
+              if (cover && !cover.startsWith('http')) {
+                cover = this.resolveUrl(cover);
+              }
+              novels.push({ name, path, cover: cover || defaultCover });
+              processedPaths.add(path);
+            }
+          });
+      } else {
+        // For pages 2-34, extract from the main content area
+        // These pages show chronological updates
+        $('a[href*="/series/"]').each((i, el) => {
+          const path = $(el).attr('href');
+          if (path && path.includes('/series/') && !processedPaths.has(path)) {
+            // Get the name from the link text or nearby heading
+            let name = $(el).text().trim();
+
+            // If the link text is too short, look for a better name
+            if (name.length < 3) {
+              const $parent = $(el).closest(
+                '.px-2.mb-4, .flex-wrap, article, div',
+              );
+              name =
+                $parent
+                  .find('a.text-lg, h6, .font-bold')
+                  .first()
+                  .text()
+                  .trim() || name;
+            }
+
+            // Get cover image from the link or parent container
+            let cover =
+              $(el).find('img').attr('src') ||
+              $(el).closest('div').find('img').first().attr('src');
+
             if (cover && !cover.startsWith('http')) {
               cover = this.resolveUrl(cover);
             }
+
             novels.push({ name, path, cover: cover || defaultCover });
             processedPaths.add(path);
           }
         });
+      }
     }
 
     return novels;
