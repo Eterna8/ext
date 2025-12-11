@@ -9,7 +9,11 @@
       "Bash(git rebase origin/master)",
       "Bash(cat .gitignore)",
       "Bash(cat .dist/plugins.json)",
-      "Bash([ -f .dist/plugins.min.json ])"
+      "Bash([ -f .dist/plugins.min.json ])",
+      "Bash(npm run build)",
+      "Bash(npm run build:compile)",
+      "Bash(npm run build:manifest)",
+      "WebFetch(domain:readhive.org)"
     ]
   }
 }

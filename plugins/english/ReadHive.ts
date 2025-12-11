@@ -68,101 +68,92 @@ class ReadHivePlugin implements Plugin.PluginBase {
     return novels;
   }
 
+  // Real AJAX search: we use the exact same endpoint and form data as the website.
+  // This is the most reliable approach since we're copying what actually works.
   async searchNovels(
     searchTerm: string,
     pageNo: number,
   ): Promise<Plugin.NovelItem[]> {
     try {
-      console.log('=== SEARCH DEBUG START ===');
-      console.log('Search term:', searchTerm);
-      console.log('Page:', pageNo);
+      // Use the same AJAX endpoint the website uses
+      const ajaxUrl = `${this.site}/ajax`;
 
-      // Use WordPress REST API to search for posts
-      const searchUrl = `${this.site}/wp-json/wp/v2/posts?search=${encodeURIComponent(searchTerm)}&per_page=20&page=${pageNo}`;
-      console.log('Making WordPress API request to:', searchUrl);
+      // Create form data exactly like the website does
+      const formData = new FormData();
+      formData.append('search', searchTerm);
+      formData.append('orderBy', 'recent');
+      formData.append('post', '6170aacf2b'); // This seems to be a nonce/identifier
+      formData.append('action', 'fetch_browse');
 
-      const result = await fetchApi(searchUrl);
-      console.log('Response status:', result.status);
+      // Make the POST request with form data
+      const result = await fetchApi(ajaxUrl, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json, text/javascript, */*; q=0.01',
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+      });
+
+      if (!result.ok) {
+        return [];
+      }
 
       const text = await result.text();
-      console.log(
-        'Response type:',
-        typeof text === 'string' ? 'text' : 'other',
-      );
 
-      // Try to parse as JSON first
-      let jsonData;
+      // Parse JSON response
+      let jsonData: any;
       try {
         jsonData = JSON.parse(text);
-        console.log('Successfully parsed JSON response');
-      } catch (e) {
-        console.log(
-          'Failed to parse JSON as WordPress API, falling back to HTML parsing',
-        );
-        const $ = loadCheerio(text);
-        const novels: Plugin.NovelItem[] = [];
+      } catch (parseError) {
+        return [];
+      }
 
-        // Look for WordPress post structure in HTML
-        $('article').each((i, el) => {
-          const titleEl = $(el).find('h1, h2, h3').first();
-          const linkEl = $(el).find('a').first();
-          const imgEl = $(el).find('img').first();
+      const novels: Plugin.NovelItem[] = [];
 
-          if (titleEl && linkEl && imgEl) {
-            const name = titleEl.text().trim();
-            const path = linkEl.attr('href');
-            const cover = imgEl.attr('src');
+      // Handle the response structure from the real AJAX endpoint
+      let postsArray: any[] = [];
 
-            if (name && path && path.includes('/series/')) {
-              const novel: Plugin.NovelItem = {
-                name: name,
-                path: path.replace(this.site, ''),
-                cover:
-                  cover && cover.startsWith('http')
-                    ? cover
-                    : this.resolveUrl(cover),
-              };
-              novels.push(novel);
-              console.log('Found novel via HTML fallback:', name);
-            }
-          }
-        });
-
-        console.log('=== SEARCH DEBUG END ===');
-        console.log('Returning', novels.length, 'novels');
+      if (
+        jsonData &&
+        jsonData.success &&
+        jsonData.data &&
+        jsonData.data.posts &&
+        Array.isArray(jsonData.data.posts)
+      ) {
+        // ReadHive returns {success: true, data: {posts: [...]}}
+        postsArray = jsonData.data.posts;
+      } else if (jsonData && jsonData.posts && Array.isArray(jsonData.posts)) {
+        // Fallback: direct posts array
+        postsArray = jsonData.posts;
+      } else if (Array.isArray(jsonData)) {
+        // Fallback: response is directly an array
+        postsArray = jsonData;
+      } else {
         return novels;
       }
 
-      // If we got JSON data, process it
-      const novels: Plugin.NovelItem[] = [];
+      // Process the posts array
+      postsArray.forEach((post: any) => {
+        const path =
+          post.permalink?.replace(this.site, '') ??
+          post.url?.replace(this.site, '') ??
+          '';
+        const name = post.title?.rendered ?? post.title ?? '';
+        const cover = post.thumbnail ?? '';
 
-      if (Array.isArray(jsonData)) {
-        jsonData.forEach((post: any) => {
-          if (post.link && post.title && post.link.includes('/series/')) {
-            const novel: Plugin.NovelItem = {
-              name: post.title.rendered || post.title.raw || post.title,
-              path: post.link.replace(this.site, ''),
-              cover:
-                post.featured_media && post.featured_media.source_url
-                  ? post.featured_media.source_url
-                  : '',
-            };
-            novels.push(novel);
-            console.log('Found novel via JSON:', novel.name);
-          }
-        });
-      }
+        // Only include items that are series (URL path includes /series/)
+        if (path && path.includes('/series/')) {
+          novels.push({
+            name,
+            path,
+            cover: cover ? this.resolveUrl(cover) : defaultCover,
+          });
+        }
+      });
 
-      console.log('Total novels found:', novels.length);
-      console.log('=== SEARCH DEBUG END ===');
       return novels;
     } catch (error) {
-      console.error('=== SEARCH ERROR ===');
-      console.error('Error:', error);
-      console.error(
-        'Error message:',
-        error instanceof Error ? error.message : 'Unknown error',
-      );
       return [];
     }
   }
@@ -173,45 +164,147 @@ class ReadHivePlugin implements Plugin.PluginBase {
     const body = await result.text();
     const $ = loadCheerio(body);
 
-    const name = $('h1[class*="line-clamp-4"]').text().trim();
+    // Extract novel title
+    const name = $('h1').first().text().trim() || '';
+
+    // Extract cover image
     const cover =
       $('img[alt*="Cover"]').attr('src') ||
       $('img[class*="object-cover"]').attr('src') ||
       defaultCover;
 
+    // Extract author (usually appears right after the title)
+    let author = '';
+    const h1Next = $('h1').next();
+    if (h1Next.length) {
+      author = h1Next.text().trim();
+    } else {
+      // Fallback: look for author in other common locations
+      author =
+        $('span[class*="leading-7"]').text().trim() ||
+        $('.text-sm.text-muted').first().text().trim() ||
+        '';
+    }
+
+    // Extract summary (look for Synopsis section)
+    let summary = '';
+    const synopsisSection = $(
+      'h2:contains("Synopsis"), h3:contains("Synopsis"), h4:contains("Synopsis")',
+    );
+    if (synopsisSection.length) {
+      summary =
+        synopsisSection.next('div').find('p').text().trim() ||
+        synopsisSection.nextUntil('h2, h3, h4').text().trim();
+    }
+
+    // Extract genres
+    const genres = $('a[href*="/genre/"]')
+      .map((i, el) => $(el).text().trim())
+      .get()
+      .filter(text => text.length > 0)
+      .join(', ');
+
     const novel: Plugin.SourceNovel = {
       path: novelPath,
       name: name,
       cover: this.resolveUrl(cover),
-      author: $('span[class*="leading-7"]').text().trim(),
-      summary: $('h2:contains("Synopsis")').next('div').find('p').text().trim(),
-      genres: $('div.lg\\:grid-in-info a[href*="/genre/"]')
-        .map((i, el) => $(el).text())
-        .get()
-        .join(', '),
+      author: author,
+      summary: summary,
+      genres: genres,
       chapters: [],
     };
 
-    const chapterElements = $('div.grid-cols-1 a[href*="/series/"]');
+    // Extract chapters - handle both spliced and normal novels
+    const chapters: Plugin.ChapterItem[] = [];
 
-    const chapters: Plugin.ChapterItem[] = chapterElements
-      .map((i, el) => {
-        const path = $(el).attr('href');
-        if (!path) return null;
+    // Extract the series ID from the current novel path for more precise filtering
+    const seriesIdMatch = novelPath.match(/\/series\/(\d+)/);
+    const currentSeriesId = seriesIdMatch ? seriesIdMatch[1] : null;
 
-        const chapterName = $(el).find('span[class*="ml-1"]').text().trim();
-        const releaseTime = $(el).find('span.text-xs').text().trim();
+    // Look for chapter links in the table of contents or chapter list
+    const chapterLinks = $('a[href*="/series/"]').filter((i, el) => {
+      const href = $(el).attr('href');
+      if (!href) return false;
 
-        return {
-          name: chapterName,
-          path: path.replace(this.site, ''),
-          releaseTime: releaseTime,
-        };
-      })
-      .get()
-      .filter(Boolean) as Plugin.ChapterItem[];
+      // Must match the current series ID to avoid other novels
+      if (currentSeriesId && !href.includes(`/series/${currentSeriesId}/`)) {
+        return false;
+      }
 
-    novel.chapters = chapters.reverse();
+      // Exclude the main series link and other non-chapter links
+      return (
+        href !== novelPath &&
+        !href.includes('#') &&
+        (href.match(/\/series\/\d+\/\d+\/?$/) ||
+          href.match(/\/series\/\d+\/v\d+\/[\d.]+\/?$/))
+      ); // Normal: /series/123/3/ or Spliced: /series/123/v1/3.1/
+    });
+
+    chapterLinks.each((i, el) => {
+      const $el = $(el);
+      const path = $el.attr('href');
+      if (!path) return;
+
+      // Double-check this is a chapter link for the current series
+      if (currentSeriesId && !path.includes(`/series/${currentSeriesId}/`)) {
+        return;
+      }
+
+      // Extract chapter name from the link text or title attribute
+      let chapterName =
+        $el.text().trim() || $el.attr('title') || `Chapter ${i + 1}`;
+
+      // Skip if this looks like a novel title or unrelated link
+      if (
+        chapterName.toLowerCase().includes('chapter') === false &&
+        chapterName.toLowerCase().includes('vol.') === false &&
+        chapterName.toLowerCase().includes('prologue') === false &&
+        chapterName.toLowerCase().includes('epilogue') === false &&
+        !path.match(/\/v\d+\/[\d.]+/) && // Not spliced chapter
+        !path.match(/\/\d+\/$/)
+      ) {
+        // Not normal chapter
+        return;
+      }
+
+      // Extract release time if available
+      let releaseTime = '';
+      const timeElement = $el.find(
+        'time, .time, .date, span[class*="time"], span[class*="date"]',
+      );
+      if (timeElement.length) {
+        releaseTime = timeElement.text().trim();
+      }
+
+      chapters.push({
+        name: chapterName,
+        path: path.replace(this.site, ''),
+        releaseTime: releaseTime,
+      });
+    });
+
+    // Sort chapters by path to maintain order
+    chapters.sort((a, b) => {
+      // Extract numeric parts for proper sorting
+      const aNum = a.path.match(/\/(\d+)(?:\/|$)/);
+      const bNum = b.path.match(/\/(\d+)(?:\/|$)/);
+
+      if (aNum && bNum) {
+        return parseInt(aNum[1]) - parseInt(bNum[1]);
+      }
+
+      return a.path.localeCompare(b.path);
+    });
+
+    // Remove duplicates and limit to reasonable number
+    const uniqueChapters = chapters
+      .filter(
+        (chapter, index, self) =>
+          index === self.findIndex(c => c.path === chapter.path),
+      )
+      .slice(0, 200); // Limit to 200 chapters max
+
+    novel.chapters = uniqueChapters;
     return novel;
   }
 
@@ -221,22 +314,52 @@ class ReadHivePlugin implements Plugin.PluginBase {
     const body = await result.text();
     const $ = loadCheerio(body);
 
-    const content = $(
-      'div[class*="lg:grid-in-content"] div[style*="font-size"]',
-    );
+    // Try multiple selectors to find the main content
+    let content = $('div[class*="lg:grid-in-content"] div[style*="font-size"]');
 
-    content.find('div[data-fuse]').remove();
-    content.find('div.socials').remove();
-    content.find('div.reader-settings').remove();
-    content.find('div.nav-wrapper').remove();
-    content.find('p:contains("• • •")').remove();
+    // Fallback selectors for different page layouts
+    if (content.length === 0) {
+      content = $(
+        'article .entry-content, .post-content, .chapter-content, .content-body',
+      );
+    }
 
+    if (content.length === 0) {
+      content = $('main .prose, .reader-content, .chapter-reader');
+    }
+
+    if (content.length === 0) {
+      content = $(
+        'div[class*="content"], div[class*="chapter"], div[class*="reader"]',
+      );
+    }
+
+    // Remove unwanted elements
+    content
+      .find(
+        'div[data-fuse], .ads, .advertisement, .socials, .reader-settings, .nav-wrapper, .navigation, .pagination',
+      )
+      .remove();
+    content.find('p:contains("• • •"), p:contains("***")').remove();
+
+    // Clean up empty paragraphs
     content.find('p').each((i, el) => {
-      if ($(el).html()?.trim() === '&nbsp;' || $(el).html()?.trim() === '') {
+      const text = $(el).text().trim();
+      const html = $(el).html()?.trim();
+      if (!text || html === '&nbsp;' || html === '' || text === '• • •') {
         $(el).remove();
       }
     });
 
+    // Format paragraphs with proper spacing
+    content.find('p').each((i, el) => {
+      const $p = $(el);
+      if (!$p.find('br, div, p').length) {
+        $p.html('<p>' + $p.html() + '</p>');
+      }
+    });
+
+    // Return the cleaned HTML content
     return content.html() || '';
   }
 }
