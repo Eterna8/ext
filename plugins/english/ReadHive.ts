@@ -78,11 +78,24 @@ class ReadHivePlugin implements Plugin.PluginBase {
       // Use the same AJAX endpoint the website uses
       const ajaxUrl = `${this.site}/ajax`;
 
+      // First, fetch the browse-series page to extract the dynamic nonce
+      let nonce = '6170aacf2b'; // fallback value
+      try {
+        const browsePage = await fetchApi(`${this.site}/browse-series/`);
+        const browseHtml = await browsePage.text();
+        const nonceMatch = browseHtml.match(/x-data="browse\('([^']+)'\)"/);
+        if (nonceMatch && nonceMatch[1]) {
+          nonce = nonceMatch[1];
+        }
+      } catch (nonceError) {
+        // If we can't fetch the nonce, continue with fallback
+      }
+
       // Create form data exactly like the website does
       const formData = new FormData();
       formData.append('search', searchTerm);
       formData.append('orderBy', 'recent');
-      formData.append('post', '6170aacf2b'); // This seems to be a nonce/identifier
+      formData.append('post', nonce); // Use dynamic nonce
       formData.append('action', 'fetch_browse');
 
       // Make the POST request with form data
@@ -92,20 +105,31 @@ class ReadHivePlugin implements Plugin.PluginBase {
         headers: {
           'Accept': 'application/json, text/javascript, */*; q=0.01',
           'X-Requested-With': 'XMLHttpRequest',
+          'User-Agent':
+            'Mozilla/5.0 (Linux; Android 10; SM-G973F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36',
+          'Referer': `${this.site}/browse-series/`,
         },
       });
 
       if (!result.ok) {
+        console.error(
+          '[ReadHive] AJAX request failed:',
+          result.status,
+          result.statusText,
+        );
         return [];
       }
 
       const text = await result.text();
+      console.log('[ReadHive] Raw response:', text.substring(0, 200));
 
       // Parse JSON response
       let jsonData: any;
       try {
         jsonData = JSON.parse(text);
+        console.log('[ReadHive] Parsed JSON:', jsonData);
       } catch (parseError) {
+        console.error('[ReadHive] JSON parse error:', parseError);
         return [];
       }
 
@@ -123,13 +147,28 @@ class ReadHivePlugin implements Plugin.PluginBase {
       ) {
         // ReadHive returns {success: true, data: {posts: [...]}}
         postsArray = jsonData.data.posts;
+        console.log(
+          '[ReadHive] Found posts array in data.posts, length:',
+          postsArray.length,
+        );
       } else if (jsonData && jsonData.posts && Array.isArray(jsonData.posts)) {
         // Fallback: direct posts array
         postsArray = jsonData.posts;
+        console.log(
+          '[ReadHive] Found posts array in posts, length:',
+          postsArray.length,
+        );
       } else if (Array.isArray(jsonData)) {
         // Fallback: response is directly an array
         postsArray = jsonData;
+        console.log(
+          '[ReadHive] Response is direct array, length:',
+          postsArray.length,
+        );
       } else {
+        console.log(
+          '[ReadHive] No posts array found in response, returning empty',
+        );
         return novels;
       }
 
@@ -144,16 +183,21 @@ class ReadHivePlugin implements Plugin.PluginBase {
 
         // Only include items that are series (URL path includes /series/)
         if (path && path.includes('/series/')) {
+          console.log('[ReadHive] Adding novel:', { name, path, cover });
           novels.push({
             name,
             path,
             cover: cover ? this.resolveUrl(cover) : defaultCover,
           });
+        } else {
+          console.log('[ReadHive] Skipping non-series item:', { name, path });
         }
       });
 
+      console.log('[ReadHive] Returning', novels.length, 'novels');
       return novels;
     } catch (error) {
+      console.error('[ReadHive] Search error:', error);
       return [];
     }
   }
